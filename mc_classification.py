@@ -48,7 +48,7 @@ if __name__ == "__main__":
     parser.add_argument('-e', '--epochs', type=int, required=True, help='Number of epochs')
     parser.add_argument('-a', '--batchSize', type=int, required=True, help='Batch size')
     parser.add_argument('-b', '--learningRate', type=float, required=True, help='Learning rate')
-    parser.add_argument('-c', '--decay', type=float, default=0, help='Learning rate decay')
+    parser.add_argument('-c', '--decay', type=float, default=0.1, help='ReduceLROnPlateau() parameter: factor')
     parser.add_argument('-d', '--dropoutRate', type=float, default=0, help='Drop-out rate')
     parser.add_argument('-r', '--regularizer', type=float, default=0, help='Regularizer')
     parser.add_argument('-i', '--iteration', type=int, default=1, help='Iteration number i')
@@ -155,7 +155,7 @@ if __name__ == "__main__":
     subplot_lines = 2
     if args.ReduceLROnPlateau:
         subplot_lines = 3
-        ReduceLROnPlateau = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=10, verbose=True, cooldown=1, min_lr=0) # argument min_delta is not supported
+        ReduceLROnPlateau = ReduceLROnPlateau(monitor='val_loss', factor=my_decay, patience=10, verbose=True, cooldown=1, min_lr=0) # argument min_delta is not supported
         callbacks.append(ReduceLROnPlateau)
 
     # Fitting the Model -> TRAINING
@@ -285,7 +285,7 @@ if __name__ == "__main__":
     if args.ReduceLROnPlateau:
         pickle.dump(lrm.lrates, open(filepath+"lr_"+name+".pickle", "wb"))
         plt.subplot(subplot_lines,1,3)
-        plotter(filepath+"lr_"+name+".pickle","learning Rate",name +"'s Learning Rate")
+        plotter(filepath+"lr_"+name+".pickle","learning Rate",name +"'s Learning Rate, Factor=" + my_decay)
         plt.grid()
         plt.legend(['lr'], loc='upper right')
 
