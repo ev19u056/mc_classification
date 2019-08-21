@@ -131,7 +131,7 @@ def dataLoader(filepath, name, fraction, luminosity=139500):
     print 'Datasets contain a total of', len(data), ' events'
 
     # np.utils.to_categorical is used to convert array of labeled data(from 0 to nb_classes-1) to one-hot vector.
-    data.category = np_uptils.to_categorical(data.category, num_classes=6)
+    data.category = np_utils.to_categorical(data.category, num_classes=6)
 
     dataDev, dataVal, dataTest = np.split(data.sample(frac=1,random_state=seed).reset_index(drop=True), [int(0.8*len(data)), int(0.9*len(data))])
     del data
