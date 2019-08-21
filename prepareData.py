@@ -131,22 +131,25 @@ def dataLoader(filepath, name, fraction, luminosity=139500):
     print 'Datasets contain a total of', len(data), ' events'
 
     # np.utils.to_categorical is used to convert array of labeled data(from 0 to nb_classes-1) to one-hot vector.
-    data.category = np_utils.to_categorical(data.category, num_classes=6)
+    # data.category = np_utils.to_categorical(data.category, num_classes=6)
 
     dataDev, dataVal, dataTest = np.split(data.sample(frac=1,random_state=seed).reset_index(drop=True), [int(0.8*len(data)), int(0.9*len(data))])
     del data
 
     XDev = dataDev[trainFeatures]
     YDev = dataDev.category
+    YDev = np_utils.to_categorical(YDev, num_classes=6)
     print(YDev)
     weightDev = np.ravel(dataDev.sampleWeight)
 
     XVal = dataVal[trainFeatures]
     YVal = dataVal.category
+    YVal = np_utils.to_categorical(YVal, num_classes=6)
     weightVal = np.ravel(dataVal.sampleWeight)
 
     XTest = dataTest[trainFeatures]
     YTest = dataTest.category
+    YTest = np_utils.to_categorical(YTest, num_classes=6)
     weightTest = np.ravel(dataTest.sampleWeight)
 
     # Creating a text file where all of the prepareData caracteristics are displayed
