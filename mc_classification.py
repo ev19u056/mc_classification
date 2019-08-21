@@ -283,6 +283,7 @@ if __name__ == "__main__":
     #plt.savefig(filepath + "loss/Loss_Validation.pdf")
 
     if args.ReduceLROnPlateau:
+        pickle.dump(lrm.lrates, open(filepath+"lr_"+name+".pickle", "wb"))
         plt.subplot(subplot_lines,1,3)
         plotter(filepath+"lr_"+name+".pickle","learning Rate",name +"'s Learning Rate")
         plt.grid()
