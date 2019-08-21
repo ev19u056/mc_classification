@@ -15,7 +15,8 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from keras.callbacks import Callback
 from keras import backend
 
-import matplotlib.backends.backend_pdf # saving multiple figures into one PDF file
+#import matplotlib.backends.backend_pdf # saving multiple figures into one PDF file
+from matplotlib.backends.backend_pdf import PdfPages
 from commonFunctions import assure_path_exists, plotter#, getYields, FullFOM, myClassifier, gridClassifier, getDefinedClassifier,
 import matplotlib.pyplot as plt
 import numpy as np
@@ -264,35 +265,36 @@ if __name__ == "__main__":
     f.close()
     print("DONE: Creating a text file where all of the model's caracteristics are displayed")
 
-    with PdfPages(filepath+name+"_Accuracy_Loss_"+compileArgs['loss']+".pdf") as pdf:
+    pdf_pages = PdfPages(filepath+name+"_Accuracy_Loss_"+compileArgs['loss']+".pdf")
 
-        fig1=plt.figure()
-        plt.subplots_adjust(hspace=0.5)
+    fig = plt.figure(figsize=(8.27, 11.69), dpi=100)
+    plt.subplots_adjust(hspace=0.5)
 
-        plt.subplot(2,1,1)
-        plotter(filepath+"accuracy/acc_"+name+".pickle","accuracy",name+"'s accuracy")
-        plotter(filepath+"accuracy/val_acc_"+name+".pickle","Val accuracy",name+"'s Accuracy")
+    plt.subplot(2,1,1)
+    plotter(filepath+"accuracy/acc_"+name+".pickle","accuracy",name+"'s accuracy")
+    plotter(filepath+"accuracy/val_acc_"+name+".pickle","Val accuracy",name+"'s Accuracy")
+    plt.grid()
+    plt.legend(['train', 'val'], loc='lower right')
+    #plt.savefig(filepath+"accuracy/Accuracy.pdf")
+
+    plt.subplot(2,1,2)
+    plotter(filepath+"loss/loss_"+name+".pickle","loss",name +"loss function")
+    plotter(filepath+"loss/val_loss_"+name+".pickle","loss Validation",name+"'s Loss")
+    plt.grid()
+    plt.legend(['train', 'val'], loc='upper right')
+    #plt.savefig(filepath + "loss/Loss_Validation.pdf")
+    pdf_pages.savefig(fig)
+    plt.close()
+
+    if args.ReduceLROnPlateau:
+        fig = plt.figure(figsize=(8.27, 11.69), dpi=100)
+        pickle.dump(lrm.lrates, open(filepath+"lr_"+name+".pickle", "wb"))
+        plotter(filepath+"lr_"+name+".pickle","learning Rate",name +"'s Learning Rate, Factor=" + str(my_decay), log=True)
         plt.grid()
-        plt.legend(['train', 'val'], loc='lower right')
-        #plt.savefig(filepath+"accuracy/Accuracy.pdf")
-
-        plt.subplot(2,1,2)
-        plotter(filepath+"loss/loss_"+name+".pickle","loss",name +"loss function")
-        plotter(filepath+"loss/val_loss_"+name+".pickle","loss Validation",name+"'s Loss")
-        plt.grid()
-        plt.legend(['train', 'val'], loc='upper right')
-        #plt.savefig(filepath + "loss/Loss_Validation.pdf")
-        pdf.savefig(fig1)
+        plt.legend(['lr'], loc='upper right')
+        pdf_pages.savefig(fig)
         plt.close()
-
-        if args.ReduceLROnPlateau:
-            fig2 = plt.figure()
-            pickle.dump(lrm.lrates, open(filepath+"lr_"+name+".pickle", "wb"))
-            plotter(filepath+"lr_"+name+".pickle","learning Rate",name +"'s Learning Rate, Factor=" + str(my_decay), log=True)
-            plt.grid()
-            plt.legend(['lr'], loc='upper right')
-            pdf.savefig(fig2)
-            plt.close()
+    pdf_pages.close()
     # Plot accuracy and loss evolution over epochs for both training and validation datasets
     '''
     fig=plt.figure()
