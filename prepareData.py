@@ -139,7 +139,6 @@ def dataLoader(filepath, name, fraction, luminosity=139500):
     XDev = dataDev[trainFeatures]
     YDev = dataDev.category
     YDev = np_utils.to_categorical(YDev, num_classes=6)
-    print(YDev)
     weightDev = np.ravel(dataDev.sampleWeight)
 
     XVal = dataVal[trainFeatures]
@@ -213,7 +212,7 @@ def dataLoader(filepath, name, fraction, luminosity=139500):
 
     return dataDev, dataVal, dataTest, XDev, YDev, weightDev, XVal, YVal, weightVal, XTest, YTest, weightTest
 
-filepath = cfg.lgbk
-name = 'Model_Ver_1'
-fraction = 0.05
-dataLoader(filepath, name, fraction)
+# filepath = cfg.lgbk
+# name = 'Model_Ver_1'
+# fraction = 0.05
+# dataLoader(filepath, name, fraction)

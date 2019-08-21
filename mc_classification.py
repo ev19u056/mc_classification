@@ -120,7 +120,8 @@ if __name__ == "__main__":
         while i < len(architecture) :
             model.add(Dense(int(architecture[i]), activation=act , kernel_initializer=ini))
             i=i+1
-        model.add(Dense(1, activation='sigmoid',kernel_initializer='glorot_normal')) # output
+        model.add(Dense(6, activation='softmax',kernel_initializer='glorot_normal')) # output
+                                                                                     # try also glorot_uniform(seed=...)
     else:
         if args.verbose:
             print("# WARNING: BatchNormalization will be used!")
@@ -191,6 +192,7 @@ if __name__ == "__main__":
     print "Val_loss: ", scoreVal[0], "     Val_acc: ", scoreVal[1]
     print "Test_loss: ", scoreTest[0], "   Test_acc: ", scoreTest[1]
 
+    '''
     # --- Calculating FOM --- #
     if args.verbose:
         print "Calculating FOM..."
@@ -237,11 +239,12 @@ if __name__ == "__main__":
         else:
             print "ERROR: someting goes wrong!"
     # --- Calculating FOM --- #
+    '''
 
     # Creating a text file where all of the model's caracteristics are displayed
     f=open(testpath + "README.md", "a")
     # f.write("\n \n **{}** : Neuron-Layers: 53 {} 1 ; Activation: {} ; Output: Sigmoid ; Batch size: {} ; Epochs: {} ; Step size: {} ; Optimizer: Adam ; Regulizer: {} ; Max FOM : {} ; Weight Initializer: {}   \n ".format(name, List, act, batch_size, n_epochs, learning_rate, regularizer, max_FOM, ini ))
-    f.write("\n \n **{}** : Neuron-Layers: 53 {} 1 ; Activation: {} ; Output: Sigmoid ; BatchNormalization: {} ; Batch size: {} ; Epochs: {} ; Optimizer: Adam ; Regulizer: {} ; Max FOM : {} ; Weight Initializer: {}\nLR_list: {}\n".format(name, List, act, args.batchNorm, batch_size, len(history.history['loss']), regularizer, max_FOM, ini,lr_list))
+    f.write("\n \n **{}** : Neuron-Layers: 53 {} 6 ; Activation: {} ; Output: softmax ; BatchNormalization: {} ; Batch size: {} ; Epochs: {} ; Optimizer: Adam ; Regulizer: {} ; Weight Initializer: {}\nLR_list: {}\n".format(name, List, act, args.batchNorm, batch_size, len(history.history['loss']), regularizer, ini, lr_list))
     f.write("Dev_loss:  {}   Dev_acc:  {}\n".format(scoreDev[0], scoreDev[1]))
     f.write("Val_loss:  {}   Val_acc:  {}\n".format(scoreVal[0], scoreVal[1]))
     f.write("Test_loss: {}   Test_acc: {}\n".format(scoreTest[0], scoreTest[1]))
