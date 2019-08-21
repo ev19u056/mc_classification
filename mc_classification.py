@@ -96,7 +96,7 @@ if __name__ == "__main__":
     filepath = cfg.lgbk+"test/"+name+"/"
 
     ## Directory to save your NN files. Edit lgbk variable in localConfig.py
-    # lgbk = "/home/t3atlas/ev19u056/projetoWH/"
+    # lgbk = "/home/t3atlas/ev19u056/mc_classification/"
 
     if os.path.exists(filepath) == False:
         os.mkdir(filepath)
@@ -152,7 +152,9 @@ if __name__ == "__main__":
         EarlyStopping = EarlyStopping(patience=15, verbose=True)
         callbacks.append(EarlyStopping)
 
+    subplot_lines = 2
     if args.ReduceLROnPlateau:
+        subplot_lines = 3
         ReduceLROnPlateau = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=10, verbose=True, cooldown=1, min_lr=0), # argument min_delta is not supported
         callbacks.append(ReduceLROnPlateau)
 
@@ -165,8 +167,6 @@ if __name__ == "__main__":
     if args.verbose:
         print "Training took ", training_time, " seconds"
 
-    lr_list = lrm.lrates
-
     acc = history.history['acc']
     val_acc = history.history['val_acc']
     loss = history.history['loss']
@@ -176,7 +176,7 @@ if __name__ == "__main__":
     assure_path_exists(filepath+"accuracy/")
     assure_path_exists(filepath+"loss/")
 
-    # Saving accuracy and loss values in a pickle file for later plotting
+    # Saving accuracy, loss values in a pickle file for later plotting
     pickle.dump(acc, open(filepath+"accuracy/acc_"+name+".pickle", "wb"))
     pickle.dump(loss, open(filepath+"loss/loss_"+name+".pickle", "wb"))
     pickle.dump(val_acc, open(filepath+"accuracy/val_acc_"+name+".pickle", "wb"))
@@ -184,7 +184,7 @@ if __name__ == "__main__":
 
     # Saving the trainned model
     model_json = model.to_json()    # model structure
-    with open(filepath+name + ".json", "w") as json_file:
+    with open(filepath+name+".json", "w") as json_file:
       json_file.write(model_json)
 
     # Getting predictions
@@ -255,7 +255,7 @@ if __name__ == "__main__":
     # Creating a text file where all of the model's caracteristics are displayed
     f=open(testpath + "README.md", "a")
     # f.write("\n \n **{}** : Neuron-Layers: 53 {} 1 ; Activation: {} ; Output: Sigmoid ; Batch size: {} ; Epochs: {} ; Step size: {} ; Optimizer: Adam ; Regulizer: {} ; Max FOM : {} ; Weight Initializer: {}   \n ".format(name, List, act, batch_size, n_epochs, learning_rate, regularizer, max_FOM, ini ))
-    f.write("\n \n **{}** : Neuron-Layers: 53 {} 6 ; Activation: {} ; Output: softmax ; BatchNormalization: {} ; Batch size: {} ; Epochs: {} ; Optimizer: Adam ; Regulizer: {} ; Weight Initializer: {}\nLR_list: {}\n".format(name, List, act, args.batchNorm, batch_size, len(history.history['loss']), regularizer, ini, lr_list))
+    f.write("\n \n **{}** : Neuron-Layers: 53 {} 6 ; Activation: {} ; Output: softmax ; BatchNormalization: {} ; Batch size: {} ; Epochs: {} ; Optimizer: Adam ; Regulizer: {} ; Weight Initializer: {}\n".format(name, List, act, args.batchNorm, batch_size, len(history.history['loss']), regularizer, ini))
     f.write("Dev_loss:  {}   Dev_acc:  {}\n".format(scoreDev[0], scoreDev[1]))
     f.write("Val_loss:  {}   Val_acc:  {}\n".format(scoreVal[0], scoreVal[1]))
     f.write("Test_loss: {}   Test_acc: {}\n".format(scoreTest[0], scoreTest[1]))
@@ -263,23 +263,30 @@ if __name__ == "__main__":
     f.close()
     print("DONE: Creating a text file where all of the model's caracteristics are displayed")
 
+
     # Plot accuracy and loss evolution over epochs for both training and validation datasets
     fig=plt.figure()
     plt.subplots_adjust(hspace=0.5)
 
-    plt.subplot(2,1,1)
+    plt.subplot(subplot_lines,1,1)
     plotter(filepath+"accuracy/acc_"+name+".pickle","accuracy",name+"'s accuracy")
     plotter(filepath+"accuracy/val_acc_"+name+".pickle","Val accuracy",name+"'s Accuracy")
     plt.grid()
-    plt.legend(['train', 'val'], loc='upper left')
+    plt.legend(['train', 'val'], loc='lower right')
     #plt.savefig(filepath+"accuracy/Accuracy.pdf")
 
-    plt.subplot(2,1,2)
+    plt.subplot(subplot_lines,1,2)
     plotter(filepath+"loss/loss_"+name+".pickle","loss",name +"loss function")
     plotter(filepath+"loss/val_loss_"+name+".pickle","loss Validation",name+"'s Loss")
     plt.grid()
-    plt.legend(['train', 'val'], loc='upper left')
+    plt.legend(['train', 'val'], loc='upper right')
     #plt.savefig(filepath + "loss/Loss_Validation.pdf")
+
+    if args.ReduceLROnPlateau:
+        plt.subplot(subplot_lines,1,3)
+        plotter(filepath+"lr_"+name+".pickle","learning Rate",name +"'s Learning Rate")
+        plt.grid()
+        plt.legend(['lr'], loc='upper right')
 
     plt.savefig(filepath+name+"_Accuracy_Loss_"+compileArgs['loss']+".pdf")
     plt.close()
