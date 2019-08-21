@@ -155,7 +155,7 @@ if __name__ == "__main__":
     subplot_lines = 2
     if args.ReduceLROnPlateau:
         subplot_lines = 3
-        ReduceLROnPlateau = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=10, verbose=True, cooldown=1, min_lr=0), # argument min_delta is not supported
+        ReduceLROnPlateau = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=10, verbose=True, cooldown=1, min_lr=0) # argument min_delta is not supported
         callbacks.append(ReduceLROnPlateau)
 
     # Fitting the Model -> TRAINING
