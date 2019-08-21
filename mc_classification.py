@@ -266,7 +266,7 @@ if __name__ == "__main__":
 
     # Plot accuracy and loss evolution over epochs for both training and validation datasets
     fig=plt.figure()
-    plt.subplots_adjust(hspace=0.5)
+    plt.subplots_adjust(hspace=1.5)
 
     plt.subplot(subplot_lines,1,1)
     plotter(filepath+"accuracy/acc_"+name+".pickle","accuracy",name+"'s accuracy")
