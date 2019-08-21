@@ -12,10 +12,13 @@ import matplotlib.pyplot as plt
 import sys
 import pickle
 
-def plotter(path,Ylabel,Title):
+def plotter(path,Ylabel,Title,log=False):
     open_= open(path,'rb')
     plot_= pickle.load(open_)
-    plt.plot(plot_)
+    if log:
+        plt.semilogy(plot_)
+    else:
+        plt.plot(plot_)
     plt.ylabel(Ylabel)
     plt.xlabel("Epochs")
     plt.legend()
