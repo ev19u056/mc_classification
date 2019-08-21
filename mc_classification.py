@@ -285,7 +285,7 @@ if __name__ == "__main__":
     if args.ReduceLROnPlateau:
         pickle.dump(lrm.lrates, open(filepath+"lr_"+name+".pickle", "wb"))
         plt.subplot(subplot_lines,1,3)
-        plotter(filepath+"lr_"+name+".pickle","learning Rate",name +"'s Learning Rate, Factor=" + my_decay, log=True)
+        plotter(filepath+"lr_"+name+".pickle","learning Rate",name +"'s Learning Rate, Factor=" + str(my_decay), log=True)
         plt.grid()
         plt.legend(['lr'], loc='upper right')
 
