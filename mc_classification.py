@@ -287,7 +287,7 @@ if __name__ == "__main__":
     plt.close()
 
     if args.ReduceLROnPlateau:
-        fig = plt.figure(figsize=(8.27, 11.69), dpi=100)
+        fig = plt.figure(figsize=(8.27, 5.845), dpi=100)
         pickle.dump(lrm.lrates, open(filepath+"lr_"+name+".pickle", "wb"))
         plotter(filepath+"lr_"+name+".pickle","learning Rate",name +"'s Learning Rate, Factor=" + str(my_decay), log=True)
         plt.grid()
