@@ -15,6 +15,7 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from keras.callbacks import Callback
 from keras import backend
 
+import matplotlib.backends.backend_pdf # saving multiple figures into one PDF file
 from commonFunctions import assure_path_exists, plotter#, getYields, FullFOM, myClassifier, gridClassifier, getDefinedClassifier,
 import matplotlib.pyplot as plt
 import numpy as np
@@ -263,8 +264,37 @@ if __name__ == "__main__":
     f.close()
     print("DONE: Creating a text file where all of the model's caracteristics are displayed")
 
+    with PdfPages(filepath+name+"_Accuracy_Loss_"+compileArgs['loss']+".pdf") as pdf:
 
+        fig1=plt.figure()
+        plt.subplots_adjust(hspace=0.5)
+
+        plt.subplot(2,1,1)
+        plotter(filepath+"accuracy/acc_"+name+".pickle","accuracy",name+"'s accuracy")
+        plotter(filepath+"accuracy/val_acc_"+name+".pickle","Val accuracy",name+"'s Accuracy")
+        plt.grid()
+        plt.legend(['train', 'val'], loc='lower right')
+        #plt.savefig(filepath+"accuracy/Accuracy.pdf")
+
+        plt.subplot(2,1,2)
+        plotter(filepath+"loss/loss_"+name+".pickle","loss",name +"loss function")
+        plotter(filepath+"loss/val_loss_"+name+".pickle","loss Validation",name+"'s Loss")
+        plt.grid()
+        plt.legend(['train', 'val'], loc='upper right')
+        #plt.savefig(filepath + "loss/Loss_Validation.pdf")
+        pdf.savefig(fig1)
+        plt.close()
+
+        if args.ReduceLROnPlateau:
+            fig2 = plt.figure()
+            pickle.dump(lrm.lrates, open(filepath+"lr_"+name+".pickle", "wb"))
+            plotter(filepath+"lr_"+name+".pickle","learning Rate",name +"'s Learning Rate, Factor=" + str(my_decay), log=True)
+            plt.grid()
+            plt.legend(['lr'], loc='upper right')
+            pdf.savefig(fig2)
+            plt.close()
     # Plot accuracy and loss evolution over epochs for both training and validation datasets
+    '''
     fig=plt.figure()
     plt.subplots_adjust(hspace=1.0)
 
@@ -291,7 +321,7 @@ if __name__ == "__main__":
 
     plt.savefig(filepath+name+"_Accuracy_Loss_"+compileArgs['loss']+".pdf")
     plt.close()
-
+    '''
     if args.verbose:
         print("Accuraccy and loss plotted at {}".format(filepath))
         print ("Model name: "+name)
