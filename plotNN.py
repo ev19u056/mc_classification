@@ -48,6 +48,7 @@ if __name__ == "__main__":
     from commonFunctions import assure_path_exists
     from sklearn import metrics
     from sklearn.metrics import confusion_matrix
+    from matplotlib.backends.backend_pdf import PdfPages
 
     if args.file != None:
         model_name = args.file
@@ -118,21 +119,22 @@ if __name__ == "__main__":
 
     # Compute confusion matrix
     cm = confusion_matrix(np.argmax(YTest,axis=1),dataTest["NN"])
-    np.set_printoptions(precision=2)
-    print('Confusion matrix, without normalization')
-    print(cm)
-    plt.figure()
-    products = ['0','1','2','3','4','5']
+
+    pdf_pages = PdfPages(plots_path+"ConfusionMatrix_"+name+".pdf") # plots_path = filepath+"/plots_"+model_name+"/"
+    fig = plt.figure(figsize=(8.27, 11.69), dpi=100)
+    plt.subplots_adjust(hspace=0.5)
+    plt.subplot(2,1,1)
+    samples = ['0','1','2','3','4','5']
     plot_confusion_matrix(cm, products)
-    plt.show()
-    
+
     # Normalize the confusion matrix by row (i.e by the number of samples in each class)
     cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-    print('Normalized confusion matrix')
-    print(cm_normalized)
-    plt.figure()
+    print('Normalized confusion matrix...')
+
+    plt.subplot(2,1,2)
     plot_confusion_matrix(cm_normalized, products, title='Normalized confusion matrix')
-    plt.show()
+    pdf_pages.savefig(fig)
+    plt.close()
 
     if args.verbose:
         print("Getting scores ...")
