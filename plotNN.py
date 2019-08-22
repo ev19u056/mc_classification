@@ -82,9 +82,9 @@ if __name__ == "__main__":
     dataTest["NN"] = np.argmax(testPredict,axis=1)
 
     score = []
-    score[0] = metrics.accuracy_score(np.argmax(YDev,axis=1), dataDev["NN"],sample_weight=weightDev)
-    score[1] = metrics.accuracy_score(np.argmax(YVal,axis=1), dataVal["NN"],sample_weight=weightVal)
-    score[2] = metrics.accuracy_score(np.argmax(YTest,axis=1), dataTest["NN"],sample_weight=weightTest)
+    score.append(metrics.accuracy_score(np.argmax(YDev,axis=1), dataDev["NN"],sample_weight=weightDev))
+    score.append(metrics.accuracy_score(np.argmax(YVal,axis=1), dataVal["NN"],sample_weight=weightVal))
+    score.append(metrics.accuracy_score(np.argmax(YTest,axis=1), dataTest["NN"],sample_weight=weightTest))
 
     print("Accuracy score DEV: {}".format(score[0]))
     print("Accuracy score VAL: {}".format(score[1]))
@@ -94,9 +94,9 @@ if __name__ == "__main__":
     f.write("Accuracy_score {} {} {}".format(score[0], score[1], score[2]))
 
     # --- Calculate Classification Log Loss --- #
-    score[3] = metrics.log_loss(YDev, devPredict,sample_weight=weightDev)
-    score[4] = metrics.log_loss(YVal, valPredict,sample_weight=weightVal)
-    score[5] = metrics.log_loss(YTest, testPredict,sample_weight=weightTest)
+    score.append(metrics.log_loss(YDev, devPredict,sample_weight=weightDev))
+    score.append(metrics.log_loss(YVal, valPredict,sample_weight=weightVal))
+    score.append(metrics.log_loss(YTest, testPredict,sample_weight=weightTest))
 
     print("Log loss score DEV: {}".format(score[3]))
     print("Log loss score DEV: {}".format(score[3]))
