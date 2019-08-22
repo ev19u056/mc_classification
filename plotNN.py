@@ -124,15 +124,15 @@ if __name__ == "__main__":
     plt.figure()
     products = ['0','1','2','3','4','5']
     plot_confusion_matrix(cm, products)
-
+    plt.show()
+    
     # Normalize the confusion matrix by row (i.e by the number of samples in each class)
     cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
     print('Normalized confusion matrix')
     print(cm_normalized)
-    #plt.figure()
-    #plot_confusion_matrix(cm_normalized, products, title='Normalized confusion matrix')
-
-    #plt.show()
+    plt.figure()
+    plot_confusion_matrix(cm_normalized, products, title='Normalized confusion matrix')
+    plt.show()
 
     if args.verbose:
         print("Getting scores ...")
