@@ -81,6 +81,9 @@ if __name__ == "__main__":
 
     score = metrics.accuracy_score(np.argmax(YTest,axis=1), dataTest["NN"],sample_weight=weightTest)
     print("Accuracy score: {}".format(score))
+    f = open(plots_path+"Score.txt","w")
+    f.write("Accuracy score {}".format(score))
+    f.close()
 
     if args.verbose:
         print("Getting scores ...")
