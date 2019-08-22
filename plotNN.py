@@ -97,7 +97,7 @@ if __name__ == "__main__":
     print(pred[0]*100)
 
     score2 = metrics.log_loss(YTest, pred,sample_weight=weightTest)
-    print("Log loss score: {}".format(score))
+    print("Log loss score: {}".format(score2))
     # --- Calculate Classification Log Loss --- #
 
     f = open(plots_path+"Score.txt","w")
