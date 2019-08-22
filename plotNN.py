@@ -120,7 +120,7 @@ if __name__ == "__main__":
     # Compute confusion matrix
     cm = confusion_matrix(np.argmax(YTest,axis=1),dataTest["NN"])
 
-    pdf_pages = PdfPages(plots_path+"ConfusionMatrix_"+name+".pdf") # plots_path = filepath+"/plots_"+model_name+"/"
+    pdf_pages = PdfPages(plots_path+"ConfusionMatrix_"+model_name+".pdf") # plots_path = filepath+"/plots_"+model_name+"/"
     fig = plt.figure(figsize=(8.27, 11.69), dpi=100)
     plt.subplots_adjust(hspace=0.5)
     plt.subplot(2,1,1)
