@@ -35,6 +35,7 @@ if __name__ == "__main__":
     import matplotlib.pyplot as pltl
     from keras.models import model_from_json
     from commonFunctions import assure_path_exists
+    from sklearn import metrics
 
     if args.file != None:
         model_name = args.file
@@ -72,10 +73,14 @@ if __name__ == "__main__":
     #dataTest["NN"] = model.predict(XTest)
 
     # numpy.argmax(a, axis=None, out=None) => Returns the indices of the maximum values along an axis
-    testPred = np.argmax(model.predict(XTest),axis=1)
-    dataTest["NN"] = testPred
+    dataDev["NN"] = np.argmax(model.predict(XDev),axis=1) # raw probabilities to chosen class (highest probability)
+    dataVal["NN"] = np.argmax(model.predict(XVal),axis=1)
+    dataTest["NN"] = np.argmax(model.predict(XTest),axis=1)
+
     print(dataTest["NN"])
-    quit()
+
+    score = metrics.accuracy_score(np.argmax(YTest,axis=1), dataTest["NN"])
+    print("Accuracy score: {}".format(score))
 
     if args.verbose:
         print("Getting scores ...")
@@ -83,6 +88,7 @@ if __name__ == "__main__":
     scoreDev = model.evaluate(XDev, YDev, sample_weight=weightDev, verbose = 0)
     scoreVal = model.evaluate(XVal, YVal, sample_weight=weightVal, verbose = 0)
     scoreTest = model.evaluate(XTest, YTest, sample_weight=weightTest, verbose = 0)
+    quit()
 
     if args.verbose:
         print "Calculating parameters ..."
