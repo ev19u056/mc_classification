@@ -119,6 +119,9 @@ if __name__ == "__main__":
 
     # Compute confusion matrix
     cm = confusion_matrix(np.argmax(YTest,axis=1),dataTest["NN"])
+    if args.verbose:
+        print('Confusion matrix, without normalization')
+        print(cm)
 
     pdf_pages = PdfPages(plots_path+"ConfusionMatrix_"+model_name+".pdf") # plots_path = filepath+"/plots_"+model_name+"/"
     fig = plt.figure(figsize=(8.27, 11.69), dpi=100)
@@ -129,10 +132,15 @@ if __name__ == "__main__":
 
     # Normalize the confusion matrix by row (i.e by the number of samples in each class)
     cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-    print('Normalized confusion matrix...')
+    if args.verbose:
+        print('Normalized confusion matrix...')
+        np.set_printoptions(precision=2)
+        print(cm_normalized)
 
     plt.subplot(2,1,2)
     plot_confusion_matrix(cm_normalized, samples, title='Normalized confusion matrix')
+    if args.preview:
+        plt.show()
     pdf_pages.savefig(fig)
     plt.close()
 

@@ -1,4 +1,4 @@
-0.45
+0.3
 qqWlvHbbJ_PwPy8MINLO_ade.csv:  446013 lines     0.45 
 stopWt_PwPy8_ade.csv:          125017 lines     0.45 
 ttbar_nonallhad_PwPy8_ade.csv: 187561 lines     0.045 
