@@ -70,11 +70,10 @@ if __name__ == "__main__":
     #dataDev["NN"] = model.predict(XDev)
     #dataVal["NN"] = model.predict(XVal)
     #dataTest["NN"] = model.predict(XTest)
-    testPred = model.predict(XTest)
-    print('dataDev["NN"]: ')
-    print(testPred)
-    print(np.argmax(testPred,axis=1))
-    #print(testPres)
+
+    # numpy.argmax(a, axis=None, out=None) => Returns the indices of the maximum values along an axis
+    testPred = np.argmax(model.predict(XTest),axis=1)
+    dataTest["NN"] = testPred
     quit()
 
     if args.verbose:
