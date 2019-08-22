@@ -44,7 +44,7 @@ if __name__ == "__main__":
     from prepareData import *
     args = parser.parse_args()
 
-    import matplotlib.pyplot as pltl
+    import matplotlib.pyplot as plt
     from keras.models import model_from_json
     from commonFunctions import assure_path_exists
     from sklearn import metrics
