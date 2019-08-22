@@ -71,7 +71,7 @@ if __name__ == "__main__":
     #dataVal["NN"] = model.predict(XVal)
     dataTest["NN"] = model.predict(XTest)
 
-    print("dataDev["NN"]: ")
+    print('dataDev["NN"]: ')
     print(dataTest["NN"])
     quit()
 
