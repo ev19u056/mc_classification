@@ -77,12 +77,32 @@ if __name__ == "__main__":
     dataVal["NN"] = np.argmax(model.predict(XVal),axis=1)
     dataTest["NN"] = np.argmax(model.predict(XTest),axis=1)
 
-    print(dataTest["NN"])
-
-    score = metrics.accuracy_score(np.argmax(YTest,axis=1), dataTest["NN"],sample_weight=weightTest)
+    score1 = metrics.accuracy_score(np.argmax(YTest,axis=1), dataTest["NN"],sample_weight=weightTest)
     print("Accuracy score: {}".format(score))
+
+    from IPython.display import display
+
+    # --- Calculate Classification Log Loss --- #
+    # Don't display numpy in scientific notation
+    np.set_printoptions(precision=4)
+    np.set_printoptions(suppress=True)
+
+    # Generate predictions
+    pred = model.predict(XTest)
+
+    print("Numpy array of predictions")
+    display(pred[0:5])
+
+    print("As percent probability")
+    print(pred[0]*100)
+
+    score2 = metrics.log_loss(YTest, pred,sample_weight=weightTest)
+    print("Log loss score: {}".format(score))
+    # --- Calculate Classification Log Loss --- #
+
     f = open(plots_path+"Score.txt","w")
-    f.write("Accuracy score {}".format(score))
+    f.write("Accuracy score {}".format(score1))
+    f.write("Log loss score {}".format(score2))
     f.close()
 
     if args.verbose:
