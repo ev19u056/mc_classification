@@ -79,7 +79,7 @@ if __name__ == "__main__":
 
     print(dataTest["NN"])
 
-    score = metrics.accuracy_score(np.argmax(YTest,axis=1), dataTest["NN"])
+    score = metrics.accuracy_score(np.argmax(YTest,axis=1), dataTest["NN"],sample_weight=weightTest)
     print("Accuracy score: {}".format(score))
 
     if args.verbose:
