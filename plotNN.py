@@ -125,14 +125,14 @@ if __name__ == "__main__":
     plt.subplots_adjust(hspace=0.5)
     plt.subplot(2,1,1)
     samples = ['0','1','2','3','4','5']
-    plot_confusion_matrix(cm, products)
+    plot_confusion_matrix(cm, samples)
 
     # Normalize the confusion matrix by row (i.e by the number of samples in each class)
     cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
     print('Normalized confusion matrix...')
 
     plt.subplot(2,1,2)
-    plot_confusion_matrix(cm_normalized, products, title='Normalized confusion matrix')
+    plot_confusion_matrix(cm_normalized, samples, title='Normalized confusion matrix')
     pdf_pages.savefig(fig)
     plt.close()
 
