@@ -69,10 +69,10 @@ if __name__ == "__main__":
 
     #dataDev["NN"] = model.predict(XDev)
     #dataVal["NN"] = model.predict(XVal)
-    dataTest["NN"] = model.predict(XTest)
-
+    #dataTest["NN"] = model.predict(XTest)
+    testPred = model.predict(XTest)
     print('dataDev["NN"]: ')
-    print(dataTest["NN"])
+    print(testPred)
     quit()
 
     if args.verbose:
