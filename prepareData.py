@@ -23,7 +23,7 @@ def chunkReader(tmp):
         result = result.append(chunk)
     return result
 
-def dataLoader(filepath, name, fraction, luminosity=139500):
+def dataLoader(filepath, name, fraction, luminosity=139500,PCA=True):
     # "/home/t3atlas/ev19u056/projetoWH/data"
     datapath = cfg.loc+'/'
 
@@ -138,16 +138,22 @@ def dataLoader(filepath, name, fraction, luminosity=139500):
 
     XDev = dataDev[trainFeatures]
     YDev = dataDev.category
+
+    # one hot encode target values
     YDev = np_utils.to_categorical(YDev, num_classes=6)
     weightDev = np.ravel(dataDev.sampleWeight)
 
     XVal = dataVal[trainFeatures]
     YVal = dataVal.category
+
+    # one hot encode target values
     YVal = np_utils.to_categorical(YVal, num_classes=6)
     weightVal = np.ravel(dataVal.sampleWeight)
 
     XTest = dataTest[trainFeatures]
     YTest = dataTest.category
+
+    # one hot encode target values
     YTest = np_utils.to_categorical(YTest, num_classes=6)
     weightTest = np.ravel(dataTest.sampleWeight)
 
@@ -177,12 +183,13 @@ def dataLoader(filepath, name, fraction, luminosity=139500):
 
     # Linear dimensionality reduction using "Singular Value Decomposition" of the data to project it to a lower dimensional space.
     # The input data is centered but not scaled for each feature before applying the SVD.
-    '''
-    pca = decomposition.PCA(n_components=len(trainFeatures)).fit(XDev)
-    XDev = pca.transform(XDev)
-    XVal = pca.transform(XVal)
-    XTest = pca.transform(XTest)
-    '''
+    if PCA:
+        print "Linear dimensionality reduction is applying ..."
+        pca = decomposition.PCA(n_components=len(trainFeatures)).fit(XDev)
+        XDev = pca.transform(XDev)
+        XVal = pca.transform(XVal)
+        XTest = pca.transform(XTest)
+    f.write("PCA: {}\n".format(PCA))
     f.write("Preparing DATA took:   {0:.2f}s\n".format(time.time() - start))
     f.close()
 

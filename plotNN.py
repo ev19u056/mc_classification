@@ -73,6 +73,7 @@ if __name__ == "__main__":
     testPred = model.predict(XTest)
     print('dataDev["NN"]: ')
     print(testPred)
+    #print(testPres)
     quit()
 
     if args.verbose:
