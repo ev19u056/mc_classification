@@ -36,6 +36,7 @@ if __name__ == "__main__":
     from keras.models import model_from_json
     from commonFunctions import assure_path_exists
     from sklearn import metrics
+    from sklearn.metrics import confusion_matrix
 
     if args.file != None:
         model_name = args.file
@@ -91,7 +92,7 @@ if __name__ == "__main__":
     print("Accuracy score TEST: {}".format(score[2]))
 
     f = open(plots_path+"Score.txt","w")
-    f.write("Accuracy_score {} {} {}".format(score[0], score[1], score[2]))
+    f.write("Accuracy_score {} {} {}\n".format(score[0], score[1], score[2]))
 
     # --- Calculate Classification Log Loss --- #
     score.append(metrics.log_loss(YDev, devPredict,sample_weight=weightDev))
@@ -101,8 +102,25 @@ if __name__ == "__main__":
     print("Log loss score DEV: {}".format(score[3]))
     print("Log loss score VAL: {}".format(score[4]))
     print("Log loss score TEST: {}".format(score[5]))
-    f.write("Log_loss_score {} {} {}".format(score[3],score[4],score[5]))
+    f.write("Log_loss_score {} {} {}\n".format(score[3],score[4],score[5]))
     f.close()
+
+    # Compute confusion matrix
+    cm = confusion_matrix(np.argmax(YTest,axis=1),dataTest["NN"])
+    np.set_printoptions(precision=2)
+    print('Confusion matrix, without normalization')
+    print(cm)
+    #plt.figure()
+    #plot_confusion_matrix(cm, products)
+
+    # Normalize the confusion matrix by row (i.e by the number of samples in each class)
+    cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+    print('Normalized confusion matrix')
+    print(cm_normalized)
+    #plt.figure()
+    #plot_confusion_matrix(cm_normalized, products, title='Normalized confusion matrix')
+
+    #plt.show()
 
     if args.verbose:
         print("Getting scores ...")
