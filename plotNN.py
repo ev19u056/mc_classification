@@ -80,7 +80,8 @@ if __name__ == "__main__":
     dataDev["NN"] = np.argmax(devPredict,axis=1) # raw probabilities to chosen class (highest probability)
     dataVal["NN"] = np.argmax(valPredict,axis=1)
     dataTest["NN"] = np.argmax(testPredict,axis=1)
-    
+
+    score = []
     score[0] = metrics.accuracy_score(np.argmax(YDev,axis=1), dataDev["NN"],sample_weight=weightDev)
     score[1] = metrics.accuracy_score(np.argmax(YVal,axis=1), dataVal["NN"],sample_weight=weightVal)
     score[2] = metrics.accuracy_score(np.argmax(YTest,axis=1), dataTest["NN"],sample_weight=weightTest)
