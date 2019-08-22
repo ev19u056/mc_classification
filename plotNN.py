@@ -37,7 +37,10 @@ if __name__ == "__main__":
     parser.add_argument('-r', '--areaUnderROC', action='store_true', help='Area under ROC plot')
     parser.add_argument('-w', '--weights', action='store_true', help='Plot neural network weights')
     parser.add_argument('-z', '--structure', action='store_true', help='Plot neural network structure')
+
+    parser.add_argument('-cm', '--confusionMatrix', action='store_true', help='Plot confusion matrix')
     parser.add_argument('-d', '--preview', action='store_true', help='Preview plots')
+
 
 #python plotNN.py -v -f Model_Ver_3 -b -c -o -p -r -s
 
@@ -99,9 +102,10 @@ if __name__ == "__main__":
     score.append(metrics.accuracy_score(np.argmax(YVal,axis=1), dataVal["NN"],sample_weight=weightVal))
     score.append(metrics.accuracy_score(np.argmax(YTest,axis=1), dataTest["NN"],sample_weight=weightTest))
 
-    print("Accuracy score DEV: {}".format(score[0]))
-    print("Accuracy score VAL: {}".format(score[1]))
-    print("Accuracy score TEST: {}".format(score[2]))
+    if args.verbose:
+        print("Accuracy score DEV: {}".format(score[0]))
+        print("Accuracy score VAL: {}".format(score[1]))
+        print("Accuracy score TEST: {}".format(score[2]))
 
     f = open(plots_path+"Score.txt","w")
     f.write("Accuracy_score {} {} {}\n".format(score[0], score[1], score[2]))
@@ -111,46 +115,12 @@ if __name__ == "__main__":
     score.append(metrics.log_loss(YVal, valPredict,sample_weight=weightVal))
     score.append(metrics.log_loss(YTest, testPredict,sample_weight=weightTest))
 
-    print("Log loss score DEV: {}".format(score[3]))
-    print("Log loss score VAL: {}".format(score[4]))
-    print("Log loss score TEST: {}".format(score[5]))
+    if args.verbose:
+        print("Log loss score DEV: {}".format(score[3]))
+        print("Log loss score VAL: {}".format(score[4]))
+        print("Log loss score TEST: {}".format(score[5]))
     f.write("Log_loss_score {} {} {}\n".format(score[3],score[4],score[5]))
     f.close()
-
-    # Compute confusion matrix
-    cm = confusion_matrix(np.argmax(YTest,axis=1),dataTest["NN"])
-    if args.verbose:
-        print('Confusion matrix, without normalization')
-        print(cm)
-
-    pdf_pages = PdfPages(plots_path+"ConfusionMatrix_"+model_name+".pdf") # plots_path = filepath+"/plots_"+model_name+"/"
-    fig = plt.figure(figsize=(8.27, 11.69), dpi=100)
-    plt.subplots_adjust(hspace=0.5)
-    plt.subplot(2,1,1)
-    samples = ['0','1','2','3','4','5']
-    plot_confusion_matrix(cm, samples)
-
-    # Normalize the confusion matrix by row (i.e by the number of samples in each class)
-    cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-    if args.verbose:
-        print('Normalized confusion matrix...')
-        np.set_printoptions(precision=2)
-        print(cm_normalized)
-
-    plt.subplot(2,1,2)
-    plot_confusion_matrix(cm_normalized, samples, title='Normalized confusion matrix')
-    if args.preview:
-        plt.show()
-    pdf_pages.savefig(fig)
-    plt.close()
-
-    if args.verbose:
-        print("Getting scores ...")
-
-    scoreDev = model.evaluate(XDev, YDev, sample_weight=weightDev, verbose = 0)
-    scoreVal = model.evaluate(XVal, YVal, sample_weight=weightVal, verbose = 0)
-    scoreTest = model.evaluate(XTest, YTest, sample_weight=weightTest, verbose = 0)
-    quit()
 
     if args.verbose:
         print "Calculating parameters ..."
@@ -167,6 +137,35 @@ if __name__ == "__main__":
         args.efficiencyAndFOM = True
         args.areaUnderROC = True
         args.weights = True
+        args.confusionMatrix = True
+
+    if args.confusionMatrix:
+        # Compute confusion matrix
+        cm = confusion_matrix(np.argmax(YTest,axis=1),dataTest["NN"])
+        if args.verbose:
+            print('Confusion matrix, without normalization')
+            print(cm)
+
+        pdf_pages = PdfPages(plots_path+"ConfusionMatrix_"+model_name+".pdf") # plots_path = filepath+"/plots_"+model_name+"/"
+        fig = plt.figure(figsize=(8.27, 11.69), dpi=100)
+        plt.subplots_adjust(hspace=0.5)
+        plt.subplot(2,1,1)
+        samples = ['0','1','2','3','4','5']
+        plot_confusion_matrix(cm, samples)
+
+        # Normalize the confusion matrix by row (i.e by the number of samples in each class)
+        cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+        if args.verbose:
+            print('Normalized confusion matrix...')
+            np.set_printoptions(precision=2)
+            print(cm_normalized)
+
+        plt.subplot(2,1,2)
+        plot_confusion_matrix(cm_normalized, samples, title='Normalized confusion matrix')
+        pdf_pages.savefig(fig)
+        if args.preview:
+            plt.show()
+        plt.close()
 
     if args.loss:
         import pickle
@@ -198,7 +197,7 @@ if __name__ == "__main__":
         plt.plot(acc)
         plt.plot(val_acc)
         plt.grid()
-        plt.ylim(0.8,0.9)
+        #plt.ylim(0.8,0.9)
         plt.title('Model accuracy')
         plt.ylabel('Accuracy')
         #plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
@@ -209,10 +208,9 @@ if __name__ == "__main__":
         if args.preview:
             plt.show()
         plt.close()
-
+    quit()
     # --- Over Training Check --- #
 
-    # Negative bins appear on hist y-axis???
     if args.overtrainingCheck:
         from scipy.stats import ks_2samp
         from sklearn.metrics import cohen_kappa_score
