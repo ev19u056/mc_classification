@@ -33,7 +33,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     import matplotlib.pyplot as pltl
-    from keras.models import model_from_jsonl
+    from keras.models import model_from_json
     from commonFunctions import assure_path_exists
 
     if args.file != None:
