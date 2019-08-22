@@ -74,6 +74,7 @@ if __name__ == "__main__":
     # numpy.argmax(a, axis=None, out=None) => Returns the indices of the maximum values along an axis
     testPred = np.argmax(model.predict(XTest),axis=1)
     dataTest["NN"] = testPred
+    print(dataTest["NN"])
     quit()
 
     if args.verbose:
