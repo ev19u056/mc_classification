@@ -8,6 +8,18 @@ import pandas
 import numpy as np
 import localConfig as cfg
 
+# Plot a confusion matrix. cm is the confusion matrix, names are the names of the classes.
+def plot_confusion_matrix(cm, names, title='Confusion matrix', cmap=plt.cm.Blues):
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(names))
+    plt.xticks(tick_marks, names, rotation=45)
+    plt.yticks(tick_marks, names)
+    plt.tight_layout()
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+
 if __name__ == "__main__":
     import sys
     import argparse
@@ -110,8 +122,9 @@ if __name__ == "__main__":
     np.set_printoptions(precision=2)
     print('Confusion matrix, without normalization')
     print(cm)
-    #plt.figure()
-    #plot_confusion_matrix(cm, products)
+    plt.figure()
+    products = ['0','1','2','3','4','5']
+    plot_confusion_matrix(cm, products)
 
     # Normalize the confusion matrix by row (i.e by the number of samples in each class)
     cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
