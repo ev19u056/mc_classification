@@ -99,8 +99,8 @@ if __name__ == "__main__":
     score.append(metrics.log_loss(YTest, testPredict,sample_weight=weightTest))
 
     print("Log loss score DEV: {}".format(score[3]))
-    print("Log loss score DEV: {}".format(score[3]))
-    print("Log loss score DEV: {}".format(score[3]))
+    print("Log loss score VAL: {}".format(score[4]))
+    print("Log loss score TEST: {}".format(score[5]))
     f.write("Log_loss_score {} {} {}".format(score[3],score[4],score[5]))
     f.close()
 
