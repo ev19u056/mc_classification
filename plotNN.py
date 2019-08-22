@@ -73,36 +73,34 @@ if __name__ == "__main__":
     #dataTest["NN"] = model.predict(XTest)
 
     # numpy.argmax(a, axis=None, out=None) => Returns the indices of the maximum values along an axis
-    dataDev["NN"] = np.argmax(model.predict(XDev),axis=1) # raw probabilities to chosen class (highest probability)
-    dataVal["NN"] = np.argmax(model.predict(XVal),axis=1)
-    dataTest["NN"] = np.argmax(model.predict(XTest),axis=1)
+    devPredict = model.predict(XDev)
+    valPredict = model.predict(XVal)
+    testPredict = model.predict(XTest)
 
-    score1 = metrics.accuracy_score(np.argmax(YTest,axis=1), dataTest["NN"],sample_weight=weightTest)
-    print("Accuracy score: {}".format(score1))
+    dataDev["NN"] = np.argmax(devPredict,axis=1) # raw probabilities to chosen class (highest probability)
+    dataVal["NN"] = np.argmax(valPredict,axis=1)
+    dataTest["NN"] = np.argmax(testPredict,axis=1)
+    
+    score[0] = metrics.accuracy_score(np.argmax(YDev,axis=1), dataDev["NN"],sample_weight=weightDev)
+    score[1] = metrics.accuracy_score(np.argmax(YVal,axis=1), dataVal["NN"],sample_weight=weightVal)
+    score[2] = metrics.accuracy_score(np.argmax(YTest,axis=1), dataTest["NN"],sample_weight=weightTest)
 
-    from IPython.display import display
-
-    # --- Calculate Classification Log Loss --- #
-    # Don't display numpy in scientific notation
-    np.set_printoptions(precision=4)
-    np.set_printoptions(suppress=True)
-
-    # Generate predictions
-    pred = model.predict(XTest)
-
-    print("Numpy array of predictions")
-    display(pred[0:5])
-
-    print("As percent probability")
-    print(pred[0]*100)
-
-    score2 = metrics.log_loss(YTest, pred,sample_weight=weightTest)
-    print("Log loss score: {}".format(score2))
-    # --- Calculate Classification Log Loss --- #
+    print("Accuracy score DEV: {}".format(score[0]))
+    print("Accuracy score VAL: {}".format(score[1]))
+    print("Accuracy score TEST: {}".format(score[2]))
 
     f = open(plots_path+"Score.txt","w")
-    f.write("Accuracy score {}".format(score1))
-    f.write("Log loss score {}".format(score2))
+    f.write("Accuracy_score {} {} {}".format(score[0], score[1], score[2]))
+
+    # --- Calculate Classification Log Loss --- #
+    score[3] = metrics.log_loss(YDev, devPredict,sample_weight=weightDev)
+    score[4] = metrics.log_loss(YVal, valPredict,sample_weight=weightVal)
+    score[5] = metrics.log_loss(YTest, testPredict,sample_weight=weightTest)
+
+    print("Log loss score DEV: {}".format(score[3]))
+    print("Log loss score DEV: {}".format(score[3]))
+    print("Log loss score DEV: {}".format(score[3]))
+    f.write("Log_loss_score {} {} {}".format(score[3],score[4],score[5]))
     f.close()
 
     if args.verbose:
