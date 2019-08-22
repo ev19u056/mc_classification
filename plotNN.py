@@ -7,7 +7,7 @@ import keras
 import pandas
 import numpy as np
 import localConfig as cfg
-
+import matplotlib.pyplot as plt
 # Plot a confusion matrix. cm is the confusion matrix, names are the names of the classes.
 def plot_confusion_matrix(cm, names, title='Confusion matrix', cmap=plt.cm.Blues):
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
@@ -44,7 +44,6 @@ if __name__ == "__main__":
     from prepareData import *
     args = parser.parse_args()
 
-    import matplotlib.pyplot as plt
     from keras.models import model_from_json
     from commonFunctions import assure_path_exists
     from sklearn import metrics
