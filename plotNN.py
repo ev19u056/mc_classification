@@ -78,7 +78,7 @@ if __name__ == "__main__":
     dataTest["NN"] = np.argmax(model.predict(XTest),axis=1)
 
     score1 = metrics.accuracy_score(np.argmax(YTest,axis=1), dataTest["NN"],sample_weight=weightTest)
-    print("Accuracy score: {}".format(score))
+    print("Accuracy score: {}".format(score1))
 
     from IPython.display import display
 
