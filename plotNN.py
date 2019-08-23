@@ -143,7 +143,7 @@ if __name__ == "__main__":
     if args.areaUnderROC:
         from sklearn.metrics import roc_auc_score, roc_curve, auc
         from sklearn.preprocessing import label_binarize
-
+        from scipy import interp
         ### --- OTHER CODE --- ###
         # Compute ROC curve and ROC area for each class
         fprTest = dict()
