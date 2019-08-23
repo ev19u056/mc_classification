@@ -144,20 +144,35 @@ if __name__ == "__main__":
         from sklearn.metrics import roc_auc_score, roc_curve
         from sklearn.preprocessing import label_binarize
 
+        ### --- OTHER CODE --- ###
         # Compute ROC curve and ROC area for each class
         fpr = dict()
         tpr = dict()
         roc_auc = dict()
         n_classes = 6
         for i in range(n_classes):
-            fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
-            fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
+            fprTest[i], tprTest[i], _ = roc_curve(YTest[:, i], testPredict[:, i])
             roc_auc[i] = auc(fpr[i], tpr[i])
+        print(roc_auc)
 
+        plt.figure()
+        lw = 2
+        plt.plot(fpr[2], tpr[2], color='darkorange', lw=lw, label='ROC curve (area = %0.2f)' % roc_auc[2])
+        plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+        plt.xlim([0.0, 1.0])
+        plt.ylim([0.0, 1.05])
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        plt.title('Receiver operating characteristic example')
+        plt.legend(loc="lower right")
+        plt.show()
+
+        quit()
         # Compute micro-average ROC curve and ROC area
         fpr["micro"], tpr["micro"], _ = roc_curve(y_test.ravel(), y_score.ravel())
         roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
 
+        ### --- OTHER CODE --- ###
 
         # roc_auc_score(y_true, y_score, average='macro', sample_weight=None, max_fpr=None)
         # Compute Area Under the Receiver Operating Characteristic Curve (ROC AUC) from prediction scores.
@@ -172,6 +187,7 @@ if __name__ == "__main__":
         #           fpr : array, shape = [>2]
         #           tpr : array, shape = [>2]
         #           thresholds : array, shape = [n_thresholds]
+        # Note: this implementation is restricted to the binary classification task.
         fprDev, tprDev, _Dev = roc_curve(dataDev.category, dataDev.NN)
         fprVal, tprVal, _Val = roc_curve(dataVal.category, dataVal.NN)
         fprTest, tprTest, _Test = roc_curve(dataTest.category, dataTest.NN)
