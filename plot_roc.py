@@ -3,18 +3,6 @@
 Receiver Operating Characteristic (ROC)
 =======================================
 
-Example of Receiver Operating Characteristic (ROC) metric to evaluate
-classifier output quality.
-
-ROC curves typically feature true positive rate on the Y axis, and false
-positive rate on the X axis. This means that the top left corner of the plot is
-the "ideal" point - a false positive rate of zero, and a true positive rate of
-one. This is not very realistic, but it does mean that a larger area under the
-curve (AUC) is usually better.
-
-The "steepness" of ROC curves is also important, since it is ideal to maximize
-the true positive rate while minimizing the false positive rate.
-
 Multiclass settings
 -------------------
 
@@ -35,7 +23,7 @@ label.
              :ref:`sphx_glr_auto_examples_model_selection_plot_roc_crossval.py`.
 
 """
-print(__doc__)
+#print(__doc__)
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -56,6 +44,7 @@ y = iris.target
 # Binarize the output
 y = label_binarize(y, classes=[0, 1, 2])
 n_classes = y.shape[1]
+print(n_classes)
 
 # Add noisy features to make the problem harder
 random_state = np.random.RandomState(0)
