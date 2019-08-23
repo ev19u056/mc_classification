@@ -139,6 +139,81 @@ if __name__ == "__main__":
         args.weights = True
         args.confusionMatrix = True
 
+    # PLOTTING the ROC function
+    if args.areaUnderROC:
+        from sklearn.metrics import roc_auc_score, roc_curve
+        from sklearn.preprocessing import label_binarize
+
+        # Compute ROC curve and ROC area for each class
+        fpr = dict()
+        tpr = dict()
+        roc_auc = dict()
+        n_classes = 6
+        for i in range(n_classes):
+            fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
+            roc_auc[i] = auc(fpr[i], tpr[i])
+
+        # Compute micro-average ROC curve and ROC area
+        fpr["micro"], tpr["micro"], _ = roc_curve(y_test.ravel(), y_score.ravel())
+        roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
+
+
+        # roc_auc_score(y_true, y_score, average='macro', sample_weight=None, max_fpr=None)
+        # Compute Area Under the Receiver Operating Characteristic Curve (ROC AUC) from prediction scores.
+        # Returns: auc (float)
+        roc_integralDev = roc_auc_score(dataDev.category, dataDev.NN)
+        roc_integralVal = roc_auc_score(dataVal.category, dataVal.NN)
+        roc_integralTest = roc_auc_score(dataTest.category, dataTest.NN) # sample_weight = dataTest.EventWeight ???
+
+        # roc_curve(y_true, y_score, pos_label=None, sample_weight=None, drop_intermediate=True)
+        # Compute Receiver operating characteristic (ROC)
+        # Returns:
+        #           fpr : array, shape = [>2]
+        #           tpr : array, shape = [>2]
+        #           thresholds : array, shape = [n_thresholds]
+        fprDev, tprDev, _Dev = roc_curve(dataDev.category, dataDev.NN)
+        fprVal, tprVal, _Val = roc_curve(dataVal.category, dataVal.NN)
+        fprTest, tprTest, _Test = roc_curve(dataTest.category, dataTest.NN)
+        if args.verbose:
+            print "ROC Curve IntegralDev:", roc_integralDev
+            print "ROC Curve IntegralVal:", roc_integralVal
+            print "ROC Curve IntegralTest:", roc_integralTest
+
+        plt.figure()
+        plt.subplots_adjust(hspace=0.5)
+
+        plt.subplot(211)
+        plt.plot(fprDev, tprDev, '--')
+        plt.plot(fprVal, tprVal, ':')
+        plt.plot(fprTest, tprTest, linewidth=0.5)
+        plt.grid()
+        plt.xlabel('False positive rate')
+        plt.ylabel('True positive rate')
+        plt.title('ROC curve')
+        rocLegend = ["Dev Integral: {0}".format(roc_integralDev),"Val Integral: {0}".format(roc_integralVal),"Test Integral: {0}".format(roc_integralTest)]
+        plt.legend(rocLegend, loc='best')
+        # plt.savefig(plots_path+'ROC_'+model_name+'.pdf', bbox_inches='tight')
+        # if args.preview:
+        #     plt.show()
+        # plt.close()
+
+        #PLOTTING ROCK ZOOMED
+        plt.subplot(212)
+        plt.plot(fprDev, tprDev, '--')
+        plt.plot(fprVal, tprVal, ':')
+        plt.plot(fprTest, tprTest, linewidth=0.5)
+        plt.grid()
+        plt.xlim(0 , 0.3)
+        plt.xlabel('False positive rate')
+        plt.ylabel('True positive rate')
+        plt.title('ROC curve ZOOMED')
+        rocLegend = ["Dev Integral: {0}".format(roc_integralDev),"Val Integral: {0}".format(roc_integralVal),"Test Integral: {0}".format(roc_integralTest)]
+        plt.legend(rocLegend, loc='best')
+        plt.savefig(plots_path+'ROC_ROC_zoomed_'+model_name+'.pdf', bbox_inches='tight')
+        if args.preview:
+            plt.show()
+        plt.close()
+
     if args.confusionMatrix:
         # Compute confusion matrix
         cm = confusion_matrix(np.argmax(YTest,axis=1),dataTest["NN"])
@@ -392,65 +467,6 @@ if __name__ == "__main__":
             plt.show()
         plt.close()
 
-    # PLOTTING the ROC function
-    if args.areaUnderROC:
-        from sklearn.metrics import roc_auc_score, roc_curve
-
-        # roc_auc_score(y_true, y_score, average='macro', sample_weight=None, max_fpr=None)
-        # Compute Area Under the Receiver Operating Characteristic Curve (ROC AUC) from prediction scores.
-        # Returns: auc (float)
-        roc_integralDev = roc_auc_score(dataDev.category, dataDev.NN)
-        roc_integralVal = roc_auc_score(dataVal.category, dataVal.NN)
-        roc_integralTest = roc_auc_score(dataTest.category, dataTest.NN) # sample_weight = dataTest.EventWeight ???
-
-        # roc_curve(y_true, y_score, pos_label=None, sample_weight=None, drop_intermediate=True)
-        # Compute Receiver operating characteristic (ROC)
-        # Returns:
-        #           fpr : array, shape = [>2]
-        #           tpr : array, shape = [>2]
-        #           thresholds : array, shape = [n_thresholds]
-        fprDev, tprDev, _Dev = roc_curve(dataDev.category, dataDev.NN)
-        fprVal, tprVal, _Val = roc_curve(dataVal.category, dataVal.NN)
-        fprTest, tprTest, _Test = roc_curve(dataTest.category, dataTest.NN)
-        if args.verbose:
-            print "ROC Curve IntegralDev:", roc_integralDev
-            print "ROC Curve IntegralVal:", roc_integralVal
-            print "ROC Curve IntegralTest:", roc_integralTest
-
-        plt.figure()
-        plt.subplots_adjust(hspace=0.5)
-
-        plt.subplot(211)
-        plt.plot(fprDev, tprDev, '--')
-        plt.plot(fprVal, tprVal, ':')
-        plt.plot(fprTest, tprTest, linewidth=0.5)
-        plt.grid()
-        plt.xlabel('False positive rate')
-        plt.ylabel('True positive rate')
-        plt.title('ROC curve')
-        rocLegend = ["Dev Integral: {0}".format(roc_integralDev),"Val Integral: {0}".format(roc_integralVal),"Test Integral: {0}".format(roc_integralTest)]
-        plt.legend(rocLegend, loc='best')
-        # plt.savefig(plots_path+'ROC_'+model_name+'.pdf', bbox_inches='tight')
-        # if args.preview:
-        #     plt.show()
-        # plt.close()
-
-        #PLOTTING ROCK ZOOMED
-        plt.subplot(212)
-        plt.plot(fprDev, tprDev, '--')
-        plt.plot(fprVal, tprVal, ':')
-        plt.plot(fprTest, tprTest, linewidth=0.5)
-        plt.grid()
-        plt.xlim(0 , 0.3)
-        plt.xlabel('False positive rate')
-        plt.ylabel('True positive rate')
-        plt.title('ROC curve ZOOMED')
-        rocLegend = ["Dev Integral: {0}".format(roc_integralDev),"Val Integral: {0}".format(roc_integralVal),"Test Integral: {0}".format(roc_integralTest)]
-        plt.legend(rocLegend, loc='best')
-        plt.savefig(plots_path+'ROC_ROC_zoomed_'+model_name+'.pdf', bbox_inches='tight')
-        if args.preview:
-            plt.show()
-        plt.close()
 
     if args.weights:
         import math
