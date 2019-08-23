@@ -36,6 +36,7 @@ from sklearn.preprocessing import label_binarize
 from sklearn.multiclass import OneVsRestClassifier
 from scipy import interp
 
+from keras.utils import np_utils
 # Import some data to play with
 iris = datasets.load_iris()
 X = iris.data
@@ -43,9 +44,12 @@ y = iris.target
 
 # Binarize the output
 print(y)
-y = label_binarize(y, classes=[0, 1, 2])
-print(y)
-n_classes = y.shape[1] # n_classes = 3
+y1 = label_binarize(y, classes=[0, 1, 2])
+print(y1)
+n_classes = y1.shape[1] # n_classes = 3
+y2 = np_utils.to_categorical(y, num_classes=3)
+print(y2)
+quit()
 
 # Add noisy features to make the problem harder
 random_state = np.random.RandomState(0)
