@@ -179,24 +179,29 @@ if __name__ == "__main__":
         roc_auc_Test["macro"] = auc(fprTest["macro"], tprTest["macro"])
 
         # Plot all ROC curves
-        lw = 2
-        plt.figure()
-        plt.plot(fprTest["micro"], tprTest["micro"], label='micro-average ROC curve (area = {0:0.2f})'.format(roc_auc_Test["micro"]), color='deeppink', linestyle=':', linewidth=4)
+        pdf_pages = PdfPages(plots_path+"ROC_"+model_name+".pdf") # plots_path = filepath+"/plots_"+model_name+"/"
+        fig = plt.figure(figsize=(8.27, 5.845), dpi=100)
+        lw = 1 # linewidth
+        plt.plot(fprTest["micro"], tprTest["micro"], label='micro-average (area = {0:0.4f})'.format(roc_auc_Test["micro"]), color='deeppink', linestyle=':', linewidth=4)
 
-        plt.plot(fprTest["macro"], tprTest["macro"], label='macro-average ROC curve (area = {0:0.2f})'.format(roc_auc_Test["macro"]), color='navy', linestyle=':', linewidth=4)
+        plt.plot(fprTest["macro"], tprTest["macro"], label='macro-average (area = {0:0.4f})'.format(roc_auc_Test["macro"]), color='navy', linestyle=':', linewidth=4)
 
         colors = cycle(['aqua', 'darkorange', 'cornflowerblue','black','brown','darkgreen'])
         for i, color in zip(range(n_classes), colors):
-            plt.plot(fprTest[i], tprTest[i], color=color, lw=lw, label='ROC curve of class {0} (area = {1:0.2f})'.format(i, roc_auc_Test[i]))
+            plt.plot(fprTest[i], tprTest[i], color=color, lw=lw, label='class {0} (area = {1:0.4f})'.format(i, roc_auc_Test[i]))
 
         plt.plot([0, 1], [0, 1], 'k--', lw=lw)
         plt.xlim([0.0, 1.0])
         plt.ylim([0.0, 1.05])
         plt.xlabel('False Positive Rate')
         plt.ylabel('True Positive Rate')
-        plt.title('Some extension of Receiver operating characteristic to multi-class')
+        plt.title('ROC curve for multi-class')
         plt.legend(loc="lower right")
-        plt.show()
+        pdf_pages.savefig(fig)
+        if args.preview:
+            plt.show()
+        plt.close()
+
         '''
         ##############################################################################
         # Plot of a ROC curve for a specific class
