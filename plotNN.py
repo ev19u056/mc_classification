@@ -141,7 +141,7 @@ if __name__ == "__main__":
 
     # PLOTTING the ROC function
     if args.areaUnderROC:
-        from sklearn.metrics import roc_auc_score, roc_curve
+        from sklearn.metrics import roc_auc_score, roc_curve, auc
         from sklearn.preprocessing import label_binarize
 
         ### --- OTHER CODE --- ###
