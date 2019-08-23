@@ -114,6 +114,7 @@ for i in range(n_classes):
 print(mean_tpr)
 # Finally average it and compute AUC
 mean_tpr /= n_classes
+print(mean_tpr)
 
 fpr["macro"] = all_fpr
 tpr["macro"] = mean_tpr
