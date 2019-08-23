@@ -40,7 +40,6 @@ from keras.utils import np_utils
 # Import some data to play with
 iris = datasets.load_iris()
 X = iris.data
-print(X)
 y = iris.target
 
 # Binarize the output
@@ -67,6 +66,10 @@ fpr = dict()
 tpr = dict()
 roc_auc = dict()
 for i in range(n_classes):
+    print('y_test[:, i] =')
+    print(y_test[:, i])
+    print('y_score[:, i] =')
+    print(y_score[:, i])
     fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
     roc_auc[i] = auc(fpr[i], tpr[i])
 
