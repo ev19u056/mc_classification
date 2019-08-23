@@ -111,10 +111,9 @@ for i in range(n_classes):
     # numpy.interp(x, xp, fp, left=None, right=None, period=None)
     # Returns the one-dimensional piecewise linear interpolant to a function with given discrete data points (xp, fp), evaluated at x.
     mean_tpr += interp(all_fpr, fpr[i], tpr[i])
-print(mean_tpr)
+
 # Finally average it and compute AUC
 mean_tpr /= n_classes
-print(mean_tpr)
 
 fpr["macro"] = all_fpr
 tpr["macro"] = mean_tpr
@@ -122,21 +121,13 @@ roc_auc["macro"] = auc(fpr["macro"], tpr["macro"])
 
 # Plot all ROC curves
 plt.figure()
-plt.plot(fpr["micro"], tpr["micro"],
-         label='micro-average ROC curve (area = {0:0.2f})'
-               ''.format(roc_auc["micro"]),
-         color='deeppink', linestyle=':', linewidth=4)
+plt.plot(fpr["micro"], tpr["micro"], abel='micro-average ROC curve (area = {0:0.2f})'.format(roc_auc["micro"]), color='deeppink', linestyle=':', linewidth=4)
 
-plt.plot(fpr["macro"], tpr["macro"],
-         label='macro-average ROC curve (area = {0:0.2f})'
-               ''.format(roc_auc["macro"]),
-         color='navy', linestyle=':', linewidth=4)
+plt.plot(fpr["macro"], tpr["macro"], label='macro-average ROC curve (area = {0:0.2f})'.format(roc_auc["macro"]), color='navy', linestyle=':', linewidth=4)
 
 colors = cycle(['aqua', 'darkorange', 'cornflowerblue'])
 for i, color in zip(range(n_classes), colors):
-    plt.plot(fpr[i], tpr[i], color=color, lw=lw,
-             label='ROC curve of class {0} (area = {1:0.2f})'
-             ''.format(i, roc_auc[i]))
+    plt.plot(fpr[i], tpr[i], color=color, lw=lw, label='ROC curve of class {0} (area = {1:0.2f})'.format(i, roc_auc[i]))
 
 plt.plot([0, 1], [0, 1], 'k--', lw=lw)
 plt.xlim([0.0, 1.0])

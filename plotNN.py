@@ -148,19 +148,59 @@ if __name__ == "__main__":
         # Compute ROC curve and ROC area for each class
         fprTest = dict()
         tprTest = dict()
-        roc_aucTest = dict()
+        roc_auc_Test = dict()
         n_classes = 6
         for i in range(n_classes):
             fprTest[i], tprTest[i], _ = roc_curve(YTest[:, i], testPredict[:, i])
-            roc_aucTest[i] = auc(fprTest[i], tprTest[i])
-        print(roc_aucTest)
+            roc_auc_Test[i] = auc(fprTest[i], tprTest[i]) # Compute Area Under the Curve (AUC) using the trapezoidal rule
 
+        # Compute micro-average ROC curve and ROC area
+        fpr["micro"], tpr["micro"], _ = roc_curve(YTest.ravel(), testPredict.ravel())
+        roc_auc_Test["micro"] = auc(fprTest["micro"], tprTest["micro"])
+
+        ##############################################################################
+        # Plot ROC curves for the multiclass problem
+        # First aggregate all false positive rates
+        all_fprTest = np.unique(np.concatenate([fprTest[i] for i in range(n_classes)])) # Returns the sorted unique elements of an array
+
+        # Then interpolate all ROC curves at this points
+        mean_tprTest = np.zeros_like(all_fprTest) # Return an array of zeros with the same shape and type as a given array.
+        for i in range(n_classes):
+            # numpy.interp(x, xp, fp, left=None, right=None, period=None)
+            # Returns the one-dimensional piecewise linear interpolant to a function with given discrete data points (xp, fp), evaluated at x.
+            mean_tprTest += interp(all_fprTest, fprTest[i], tprTest[i])
+
+        # Finally average it and compute AUC
+        mean_tprTest /= n_classes
+
+        fprTest["macro"] = all_fprTest
+        tprTest["macro"] = mean_tprTest
+        roc_auc_Test["macro"] = auc(fprTest["macro"], tprTest["macro"])
+
+        # Plot all ROC curves
+        plt.figure()
+        plt.plot(fprTest["micro"], tprTest["micro"], abel='micro-average ROC curve (area = {0:0.2f})'.format(roc_auc_Test["micro"]), color='deeppink', linestyle=':', linewidth=4)
+
+        plt.plot(fprTest["macro"], tprTest["macro"], label='macro-average ROC curve (area = {0:0.2f})'.format(roc_aucTest["macro"]), color='navy', linestyle=':', linewidth=4)
+
+        colors = cycle(['aqua', 'darkorange', 'cornflowerblue','black','brown','darkgreen'])
+        for i, color in zip(range(n_classes), colors):
+            plt.plot(fprTest[i], tprTest[i], color=color, lw=lw, label='ROC curve of class {0} (area = {1:0.2f})'.format(i, roc_auc_Test[i]))
+
+        plt.plot([0, 1], [0, 1], 'k--', lw=lw)
+        plt.xlim([0.0, 1.0])
+        plt.ylim([0.0, 1.05])
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        plt.title('Some extension of Receiver operating characteristic to multi-class')
+        plt.legend(loc="lower right")
+        plt.show()
         '''
         ##############################################################################
         # Plot of a ROC curve for a specific class
         plt.figure()
         lw = 2
-        plt.plot(fprTest[2], tprTest[2], color='darkorange', lw=lw, label='ROC curve (area = %0.2f)' % roc_aucTest[2])
+        plt.plot(fprTest[2], tprTest[2], color='darkorange', lw=lw, label='ROC curve (area = %0.2f)' % roc_auc_Test[2])
         plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
         plt.xlim([0.0, 1.0])
         plt.ylim([0.0, 1.05])
@@ -171,15 +211,8 @@ if __name__ == "__main__":
         plt.show()
         '''
 
-
-
-        quit()
-        # Compute micro-average ROC curve and ROC area
-        fpr["micro"], tpr["micro"], _ = roc_curve(y_test.ravel(), y_score.ravel())
-        roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
-
         ### --- OTHER CODE --- ###
-
+        quit()
         # roc_auc_score(y_true, y_score, average='macro', sample_weight=None, max_fpr=None)
         # Compute Area Under the Receiver Operating Characteristic Curve (ROC AUC) from prediction scores.
         # Returns: auc (float)
