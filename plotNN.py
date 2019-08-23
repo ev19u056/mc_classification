@@ -155,7 +155,7 @@ if __name__ == "__main__":
             roc_auc_Test[i] = auc(fprTest[i], tprTest[i]) # Compute Area Under the Curve (AUC) using the trapezoidal rule
 
         # Compute micro-average ROC curve and ROC area
-        fpr["micro"], tpr["micro"], _ = roc_curve(YTest.ravel(), testPredict.ravel())
+        fprTest["micro"], tprTest["micro"], _ = roc_curve(YTest.ravel(), testPredict.ravel())
         roc_auc_Test["micro"] = auc(fprTest["micro"], tprTest["micro"])
 
         ##############################################################################
