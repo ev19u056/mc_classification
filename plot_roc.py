@@ -65,16 +65,16 @@ fpr = dict()
 tpr = dict()
 roc_auc = dict()
 for i in range(n_classes):
-    print('y_test[:, {}] ='.format(i))
-    print(y_test[:, i])
-    print('y_score[:, {}] ='.format(i))
-    print(y_score[:, i])
+    # print('y_test[:, {}] ='.format(i))
+    # print(y_test[:, i])
+    # print('y_score[:, {}] ='.format(i))
+    # print(y_score[:, i])
     fpr[i], tpr[i], _ = roc_curve(y_test[:, i], y_score[:, i])
     roc_auc[i] = auc(fpr[i], tpr[i])
 
 # Compute micro-average ROC curve and ROC area
-print("y_test.ravel(): {}".format(y_test.ravel()))
-print("y_score.ravel(): {}".format(y_score.ravel()))
+# print("y_test.ravel(): {}".format(y_test.ravel()))
+# print("y_score.ravel(): {}".format(y_score.ravel()))
 fpr["micro"], tpr["micro"], _ = roc_curve(y_test.ravel(), y_score.ravel())
 roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
 
