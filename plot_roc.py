@@ -93,7 +93,6 @@ plt.title('Receiver operating characteristic example')
 plt.legend(loc="lower right")
 plt.show()
 
-
 ##############################################################################
 # Plot ROC curves for the multiclass problem
 
@@ -101,6 +100,7 @@ plt.show()
 
 # First aggregate all false positive rates
 all_fpr = np.unique(np.concatenate([fpr[i] for i in range(n_classes)]))
+print("all_fpr: {}".format(all_fpr))
 
 # Then interpolate all ROC curves at this points
 mean_tpr = np.zeros_like(all_fpr)

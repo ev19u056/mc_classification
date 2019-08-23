@@ -155,6 +155,9 @@ if __name__ == "__main__":
             roc_aucTest[i] = auc(fprTest[i], tprTest[i])
         print(roc_aucTest)
 
+        '''
+        ##############################################################################
+        # Plot of a ROC curve for a specific class
         plt.figure()
         lw = 2
         plt.plot(fprTest[2], tprTest[2], color='darkorange', lw=lw, label='ROC curve (area = %0.2f)' % roc_aucTest[2])
@@ -166,6 +169,9 @@ if __name__ == "__main__":
         plt.title('Receiver operating characteristic example')
         plt.legend(loc="lower right")
         plt.show()
+        '''
+
+
 
         quit()
         # Compute micro-average ROC curve and ROC area
