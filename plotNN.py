@@ -183,7 +183,7 @@ if __name__ == "__main__":
         fig = plt.figure(figsize=(8.27, 5.845), dpi=100)
         lw = 1 # linewidth
         plt.plot(fprTest["micro"], tprTest["micro"], label='micro-average (area = {0:0.4f})'.format(roc_auc_Test["micro"]), color='deeppink', linestyle=':', linewidth=4)
-
+        plt.grid()
         plt.plot(fprTest["macro"], tprTest["macro"], label='macro-average (area = {0:0.4f})'.format(roc_auc_Test["macro"]), color='navy', linestyle=':', linewidth=4)
 
         colors = cycle(['aqua', 'darkorange', 'cornflowerblue','black','brown','darkgreen'])

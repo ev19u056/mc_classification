@@ -189,6 +189,11 @@ if __name__ == "__main__":
     with open(filepath+name+".json", "w") as json_file:
       json_file.write(model_json)
 
+    # Restoring the best weights
+    model.load_weights(filepath+name+".h5")
+    model.compile(**compileArgs)
+    #model.compile(loss = 'categorical_crossentropy', optimizer = 'adam')
+
     # Getting predictions
     if args.verbose:
         print("Getting predictions...")
