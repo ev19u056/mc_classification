@@ -99,17 +99,19 @@ plt.show()
 # Compute macro-average ROC curve and ROC area
 
 # First aggregate all false positive rates
-for i in range(n_classes):
-    print(len(fpr[i]))
-    print(fpr[i])
-all_fpr = np.unique(np.concatenate([fpr[i] for i in range(n_classes)]))
-print("all_fpr: {}".format(all_fpr))
+# for i in range(n_classes):
+#     print(len(fpr[i]))
+#     print(fpr[i])
+all_fpr = np.unique(np.concatenate([fpr[i] for i in range(n_classes)])) # Returns the sorted unique elements of an array
+#print("all_fpr: {}".format(all_fpr))
 
 # Then interpolate all ROC curves at this points
-mean_tpr = np.zeros_like(all_fpr)
+mean_tpr = np.zeros_like(all_fpr) # Return an array of zeros with the same shape and type as a given array.
 for i in range(n_classes):
+    # numpy.interp(x, xp, fp, left=None, right=None, period=None)
+    # Returns the one-dimensional piecewise linear interpolant to a function with given discrete data points (xp, fp), evaluated at x.
     mean_tpr += interp(all_fpr, fpr[i], tpr[i])
-
+print(mean_tpr)
 # Finally average it and compute AUC
 mean_tpr /= n_classes
 
