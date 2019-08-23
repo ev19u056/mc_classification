@@ -99,7 +99,8 @@ plt.show()
 # Compute macro-average ROC curve and ROC area
 
 # First aggregate all false positive rates
-print(fpr[i] for i in range(n_classes))
+for i in range(n_classes):
+    print(fpr[i]) 
 all_fpr = np.unique(np.concatenate([fpr[i] for i in range(n_classes)]))
 print("all_fpr: {}".format(all_fpr))
 
