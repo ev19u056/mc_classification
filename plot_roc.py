@@ -40,6 +40,7 @@ from keras.utils import np_utils
 # Import some data to play with
 iris = datasets.load_iris()
 X = iris.data
+print(X)
 y = iris.target
 
 # Binarize the output
