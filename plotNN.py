@@ -181,7 +181,7 @@ if __name__ == "__main__":
         plt.figure()
         plt.plot(fprTest["micro"], tprTest["micro"], label='micro-average ROC curve (area = {0:0.2f})'.format(roc_auc_Test["micro"]), color='deeppink', linestyle=':', linewidth=4)
 
-        plt.plot(fprTest["macro"], tprTest["macro"], label='macro-average ROC curve (area = {0:0.2f})'.format(roc_aucTest["macro"]), color='navy', linestyle=':', linewidth=4)
+        plt.plot(fprTest["macro"], tprTest["macro"], label='macro-average ROC curve (area = {0:0.2f})'.format(roc_auc_Test["macro"]), color='navy', linestyle=':', linewidth=4)
 
         colors = cycle(['aqua', 'darkorange', 'cornflowerblue','black','brown','darkgreen'])
         for i, color in zip(range(n_classes), colors):
