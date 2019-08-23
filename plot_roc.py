@@ -43,13 +43,9 @@ X = iris.data
 y = iris.target
 
 # Binarize the output
-print(y)
-y1 = label_binarize(y, classes=[0, 1, 2])
-print(y1)
-n_classes = y1.shape[1] # n_classes = 3
-y2 = np_utils.to_categorical(y, num_classes=3)
-print(y2)
-quit()
+#y = label_binarize(y, classes=[0, 1, 2])
+y = np_utils.to_categorical(y, num_classes=3)
+n_classes = y.shape[1] # n_classes = 3
 
 # Add noisy features to make the problem harder
 random_state = np.random.RandomState(0)
