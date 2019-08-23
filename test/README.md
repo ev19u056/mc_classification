@@ -78,3 +78,10 @@ Dev_loss:  4.8961006045e-06   Dev_acc:  0.657916458547
 Val_loss:  5.11481517441e-06   Val_acc:  0.651721539777
 Test_loss: 5.06799868527e-06   Test_acc: 0.654947045828
 Training_time: 1426.31
+
+ 
+ **Model_Ver_13** : Neuron-Layers: 53 100 90 80 70 60 50 40 30 20 15 10 6 ; Activation: selu ; Output: softmax ; BatchNormalization: False ; Batch size: 3000 ; Epochs: 34 ; Optimizer: Adam ; Regulizer: 0 ; Weight Initializer: lecun_normal
+Dev_loss:  6.27285370523e-06   Dev_acc:  0.662279669376
+Val_loss:  6.62113352414e-06   Val_acc:  0.653855363985
+Test_loss: 6.58208176919e-06   Test_acc: 0.657643242773
+Training_time: 1312.04
