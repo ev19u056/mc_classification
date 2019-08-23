@@ -146,18 +146,18 @@ if __name__ == "__main__":
 
         ### --- OTHER CODE --- ###
         # Compute ROC curve and ROC area for each class
-        fpr = dict()
-        tpr = dict()
-        roc_auc = dict()
+        fprTest = dict()
+        tprTest = dict()
+        roc_aucTest = dict()
         n_classes = 6
         for i in range(n_classes):
             fprTest[i], tprTest[i], _ = roc_curve(YTest[:, i], testPredict[:, i])
-            roc_auc[i] = auc(fpr[i], tpr[i])
-        print(roc_auc)
+            roc_aucTest[i] = auc(fprTest[i], tprTest[i])
+        print(roc_aucTest)
 
         plt.figure()
         lw = 2
-        plt.plot(fpr[2], tpr[2], color='darkorange', lw=lw, label='ROC curve (area = %0.2f)' % roc_auc[2])
+        plt.plot(fprTest[2], tprTest[2], color='darkorange', lw=lw, label='ROC curve (area = %0.2f)' % roc_aucTest[2])
         plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
         plt.xlim([0.0, 1.0])
         plt.ylim([0.0, 1.05])
