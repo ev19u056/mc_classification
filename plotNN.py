@@ -179,6 +179,7 @@ if __name__ == "__main__":
         roc_auc_Test["macro"] = auc(fprTest["macro"], tprTest["macro"])
 
         # Plot all ROC curves
+        lw = 2
         plt.figure()
         plt.plot(fprTest["micro"], tprTest["micro"], label='micro-average ROC curve (area = {0:0.2f})'.format(roc_auc_Test["micro"]), color='deeppink', linestyle=':', linewidth=4)
 
