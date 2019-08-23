@@ -71,3 +71,10 @@ Dev_loss:  4.86904283739e-06   Dev_acc:  0.657473057289
 Val_loss:  5.11889296495e-06   Val_acc:  0.65190778947
 Test_loss: 5.09384443519e-06   Test_acc: 0.651890857681
 Training_time: 1197.79
+
+ 
+ **Model_Ver_12** : Neuron-Layers: 53 100 90 80 70 60 50 40 30 20 15 10 6 ; Activation: relu ; Output: softmax ; BatchNormalization: False ; Batch size: 1000 ; Epochs: 40 ; Optimizer: Adam ; Regulizer: 0 ; Weight Initializer: he_normal
+Dev_loss:  4.8961006045e-06   Dev_acc:  0.657916458547
+Val_loss:  5.11481517441e-06   Val_acc:  0.651721539777
+Test_loss: 5.06799868527e-06   Test_acc: 0.654947045828
+Training_time: 1426.31
