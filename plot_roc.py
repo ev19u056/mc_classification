@@ -100,7 +100,8 @@ plt.show()
 
 # First aggregate all false positive rates
 for i in range(n_classes):
-    print(fpr[i]) 
+    print(len(fpr[i]))
+    print(fpr[i])
 all_fpr = np.unique(np.concatenate([fpr[i] for i in range(n_classes)]))
 print("all_fpr: {}".format(all_fpr))
 
