@@ -43,8 +43,8 @@ X = iris.data
 y = iris.target
 
 # Binarize the output
-#y = label_binarize(y, classes=[0, 1, 2])
-y = np_utils.to_categorical(y, num_classes=3)
+y = label_binarize(y, classes=[0, 1, 2])
+#y = np_utils.to_categorical(y, num_classes=3)
 n_classes = y.shape[1] # n_classes = 3
 
 # Add noisy features to make the problem harder
