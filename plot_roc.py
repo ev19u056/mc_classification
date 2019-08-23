@@ -42,9 +42,10 @@ X = iris.data
 y = iris.target
 
 # Binarize the output
+print(y)
 y = label_binarize(y, classes=[0, 1, 2])
-n_classes = y.shape[1]
-print(n_classes)
+print(y)
+n_classes = y.shape[1] # n_classes = 3
 
 # Add noisy features to make the problem harder
 random_state = np.random.RandomState(0)
