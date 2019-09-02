@@ -8,6 +8,7 @@ import pandas
 import numpy as np
 import localConfig as cfg
 import matplotlib.pyplot as plt
+
 # Plot a confusion matrix. cm is the confusion matrix, names are the names of the classes.
 def plot_confusion_matrix(cm, names, title='Confusion matrix', cmap=plt.cm.Blues):
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
@@ -31,16 +32,11 @@ if __name__ == "__main__":
     parser.add_argument('-a', '--allPlots', action='store_true', help='Wether to plot all graphs')
     parser.add_argument('-b', '--loss', action='store_true', help='Loss plot')
     parser.add_argument('-c', '--accuracy', action='store_true', help='Accuracy plot')
-    parser.add_argument('-o', '--overtrainingCheck', action='store_true', help='Wether there was overtraining')
-    parser.add_argument('-p', '--prediction', action='store_true', help='Predictions plot')
-    parser.add_argument('-e', '--efficiencyAndFOM', action='store_true', help='Plot efficiency and FOM')
     parser.add_argument('-r', '--areaUnderROC', action='store_true', help='Area under ROC plot')
     parser.add_argument('-w', '--weights', action='store_true', help='Plot neural network weights')
-    parser.add_argument('-z', '--structure', action='store_true', help='Plot neural network structure')
 
     parser.add_argument('-cm', '--confusionMatrix', action='store_true', help='Plot confusion matrix')
     parser.add_argument('-d', '--preview', action='store_true', help='Preview plots')
-
 
 #python plotNN.py -v -f Model_Ver_3 -b -c -o -p -r -s
 
@@ -53,6 +49,7 @@ if __name__ == "__main__":
     from sklearn.metrics import confusion_matrix
     from matplotlib.backends.backend_pdf import PdfPages
 
+    classes = ["sig","stop","ttbar","WlvZqq","WqqWlv","W+Jets"]
     if args.file != None:
         model_name = args.file
         # lgbk = "/home/t3atlas/ev19u056/mc_classification/"
@@ -84,10 +81,6 @@ if __name__ == "__main__":
     if args.verbose:
         print("Getting predictions ...")
 
-    #dataDev["NN"] = model.predict(XDev)
-    #dataVal["NN"] = model.predict(XVal)
-    #dataTest["NN"] = model.predict(XTest)
-
     # numpy.argmax(a, axis=None, out=None) => Returns the indices of the maximum values along an axis
     devPredict = model.predict(XDev)
     valPredict = model.predict(XVal)
@@ -111,9 +104,9 @@ if __name__ == "__main__":
     f.write("Accuracy_score {} {} {}\n".format(score[0], score[1], score[2]))
 
     # --- Calculate Classification Log Loss --- #
-    score.append(metrics.log_loss(YDev, devPredict,sample_weight=weightDev))
-    score.append(metrics.log_loss(YVal, valPredict,sample_weight=weightVal))
-    score.append(metrics.log_loss(YTest, testPredict,sample_weight=weightTest))
+    score.append(metrics.log_loss(YDev, devPredict)#,sample_weight=weightDev))
+    score.append(metrics.log_loss(YVal, valPredict)#,sample_weight=weightVal))
+    score.append(metrics.log_loss(YTest, testPredict)#,sample_weight=weightTest))
 
     if args.verbose:
         print("Log loss score DEV: {}".format(score[3]))
@@ -122,19 +115,16 @@ if __name__ == "__main__":
     f.write("Log_loss_score {} {} {}\n".format(score[3],score[4],score[5]))
     f.close()
 
-    if args.verbose:
-        print "Calculating parameters ..."
-
-    sig_dataDev = dataDev[dataDev.category==1];     bkg_dataDev = dataDev[dataDev.category == 0]      # separar sig e bkg em dataDev
-    sig_dataVal = dataVal[dataVal.category == 1];    bkg_dataVal = dataVal[dataVal.category == 0]       # separar sig e bkg em dataVal
-    sig_dataTest = dataTest[dataTest.category==1];    bkg_dataTest = dataTest[dataTest.category==0]    # separar sig e bkg em dataTest
+    # if args.verbose:
+    #     print "Calculating parameters ..."
+    #
+    # sig_dataDev = dataDev[dataDev.category==1];     bkg_dataDev = dataDev[dataDev.category == 0]      # separar sig e bkg em dataDev
+    # sig_dataVal = dataVal[dataVal.category == 1];    bkg_dataVal = dataVal[dataVal.category == 0]       # separar sig e bkg em dataVal
+    # sig_dataTest = dataTest[dataTest.category==1];    bkg_dataTest = dataTest[dataTest.category==0]    # separar sig e bkg em dataTest
 
     if args.allPlots:
         args.loss = True
         args.accuracy = True
-        args.overtrainingCheck = True
-        args.prediction = True
-        args.efficiencyAndFOM = True
         args.areaUnderROC = True
         args.weights = True
         args.confusionMatrix = True
@@ -145,7 +135,7 @@ if __name__ == "__main__":
         from sklearn.preprocessing import label_binarize
         from scipy import interp
         from itertools import cycle
-        ### --- OTHER CODE --- ###
+
         # Compute ROC curve and ROC area for each class
         fprTest = dict()
         tprTest = dict()
@@ -188,7 +178,8 @@ if __name__ == "__main__":
 
         colors = cycle(['aqua', 'darkorange', 'cornflowerblue','black','brown','darkgreen'])
         for i, color in zip(range(n_classes), colors):
-            plt.plot(fprTest[i], tprTest[i], color=color, lw=lw, label='class {0} (area = {1:0.4f})'.format(i, roc_auc_Test[i]))
+            #plt.plot(fprTest[i], tprTest[i], color=color, lw=lw, label='class {0} (area = {1:0.4f})'.format(i, roc_auc_Test[i]))
+            plt.plot(fprTest[i], tprTest[i], color=color, lw=lw, label='{0} (area = {1:0.4f})'.format(classes[i], roc_auc_Test[i]))
 
         plt.plot([0, 1], [0, 1], 'k--', lw=lw)
         plt.xlim([0.0, 1.0])
@@ -202,80 +193,23 @@ if __name__ == "__main__":
             plt.show()
         plt.close()
 
-        '''
-        ##############################################################################
-        # Plot of a ROC curve for a specific class
-        plt.figure()
-        lw = 2
-        plt.plot(fprTest[2], tprTest[2], color='darkorange', lw=lw, label='ROC curve (area = %0.2f)' % roc_auc_Test[2])
-        plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
-        plt.xlim([0.0, 1.0])
-        plt.ylim([0.0, 1.05])
-        plt.xlabel('False Positive Rate')
-        plt.ylabel('True Positive Rate')
-        plt.title('Receiver operating characteristic example')
-        plt.legend(loc="lower right")
-        plt.show()
-        '''
-
-        ### --- OTHER CODE --- ###
-        quit()
-        # roc_auc_score(y_true, y_score, average='macro', sample_weight=None, max_fpr=None)
-        # Compute Area Under the Receiver Operating Characteristic Curve (ROC AUC) from prediction scores.
-        # Returns: auc (float)
-        roc_integralDev = roc_auc_score(dataDev.category, dataDev.NN)
-        roc_integralVal = roc_auc_score(dataVal.category, dataVal.NN)
-        roc_integralTest = roc_auc_score(dataTest.category, dataTest.NN) # sample_weight = dataTest.EventWeight ???
-
-        # roc_curve(y_true, y_score, pos_label=None, sample_weight=None, drop_intermediate=True)
-        # Compute Receiver operating characteristic (ROC)
-        # Returns:
-        #           fpr : array, shape = [>2]
-        #           tpr : array, shape = [>2]
-        #           thresholds : array, shape = [n_thresholds]
-        # Note: this implementation is restricted to the binary classification task.
-        fprDev, tprDev, _Dev = roc_curve(dataDev.category, dataDev.NN)
-        fprVal, tprVal, _Val = roc_curve(dataVal.category, dataVal.NN)
-        fprTest, tprTest, _Test = roc_curve(dataTest.category, dataTest.NN)
-        if args.verbose:
-            print "ROC Curve IntegralDev:", roc_integralDev
-            print "ROC Curve IntegralVal:", roc_integralVal
-            print "ROC Curve IntegralTest:", roc_integralTest
-
-        plt.figure()
-        plt.subplots_adjust(hspace=0.5)
-
-        plt.subplot(211)
-        plt.plot(fprDev, tprDev, '--')
-        plt.plot(fprVal, tprVal, ':')
-        plt.plot(fprTest, tprTest, linewidth=0.5)
-        plt.grid()
-        plt.xlabel('False positive rate')
-        plt.ylabel('True positive rate')
-        plt.title('ROC curve')
-        rocLegend = ["Dev Integral: {0}".format(roc_integralDev),"Val Integral: {0}".format(roc_integralVal),"Test Integral: {0}".format(roc_integralTest)]
-        plt.legend(rocLegend, loc='best')
-        # plt.savefig(plots_path+'ROC_'+model_name+'.pdf', bbox_inches='tight')
-        # if args.preview:
-        #     plt.show()
-        # plt.close()
-
-        #PLOTTING ROCK ZOOMED
-        plt.subplot(212)
-        plt.plot(fprDev, tprDev, '--')
-        plt.plot(fprVal, tprVal, ':')
-        plt.plot(fprTest, tprTest, linewidth=0.5)
-        plt.grid()
-        plt.xlim(0 , 0.3)
-        plt.xlabel('False positive rate')
-        plt.ylabel('True positive rate')
-        plt.title('ROC curve ZOOMED')
-        rocLegend = ["Dev Integral: {0}".format(roc_integralDev),"Val Integral: {0}".format(roc_integralVal),"Test Integral: {0}".format(roc_integralTest)]
-        plt.legend(rocLegend, loc='best')
-        plt.savefig(plots_path+'ROC_ROC_zoomed_'+model_name+'.pdf', bbox_inches='tight')
-        if args.preview:
-            plt.show()
-        plt.close()
+        # # roc_auc_score(y_true, y_score, average='macro', sample_weight=None, max_fpr=None)
+        # # Compute Area Under the Receiver Operating Characteristic Curve (ROC AUC) from prediction scores.
+        # # Returns: auc (float)
+        # roc_integralDev = roc_auc_score(dataDev.category, dataDev.NN)
+        # roc_integralVal = roc_auc_score(dataVal.category, dataVal.NN)
+        # roc_integralTest = roc_auc_score(dataTest.category, dataTest.NN) # sample_weight = dataTest.EventWeight ???
+        #
+        # # roc_curve(y_true, y_score, pos_label=None, sample_weight=None, drop_intermediate=True)
+        # # Compute Receiver operating characteristic (ROC)
+        # # Returns:
+        # #           fpr : array, shape = [>2]
+        # #           tpr : array, shape = [>2]
+        # #           thresholds : array, shape = [n_thresholds]
+        # # Note: this implementation is restricted to the binary classification task.
+        # fprDev, tprDev, _Dev = roc_curve(dataDev.category, dataDev.NN)
+        # fprVal, tprVal, _Val = roc_curve(dataVal.category, dataVal.NN)
+        # fprTest, tprTest, _Test = roc_curve(dataTest.category, dataTest.NN)
 
     if args.confusionMatrix:
         # Compute confusion matrix
@@ -288,8 +222,8 @@ if __name__ == "__main__":
         fig = plt.figure(figsize=(8.27, 11.69), dpi=100)
         plt.subplots_adjust(hspace=0.5)
         plt.subplot(2,1,1)
-        samples = ['0','1','2','3','4','5']
-        plot_confusion_matrix(cm, samples)
+        #samples = ['0','1','2','3','4','5']
+        plot_confusion_matrix(cm, classes)
 
         # Normalize the confusion matrix by row (i.e by the number of samples in each class)
         cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
@@ -299,7 +233,7 @@ if __name__ == "__main__":
             print(cm_normalized)
 
         plt.subplot(2,1,2)
-        plot_confusion_matrix(cm_normalized, samples, title='Normalized confusion matrix')
+        plot_confusion_matrix(cm_normalized, classes, title='Normalized confusion matrix')
         pdf_pages.savefig(fig)
         if args.preview:
             plt.show()
@@ -312,16 +246,16 @@ if __name__ == "__main__":
         if args.verbose:
             print "val_loss = ", str(val_loss[-1]), "loss = ", str(loss[-1]), "val_loss - loss = ", str(val_loss[-1]-loss[-1])
 
-        plt.plot(loss)
-        plt.plot(val_loss)
+        pdf_pages = PdfPages(plots_path+'loss_'+model_name+".pdf") # plots_path = filepath+"/plots_"+model_name+"/"
+        fig = plt.figure(figsize=(8.27, 5.845), dpi=100)
+        plt.plot(loss, label='train = {0:0.4f}'.format(loss[-1]))
+        plt.plot(val_loss, label='val = {0:0.4f}'.format(val_loss[-1]))
         plt.grid()
         plt.title('Model loss')
         plt.ylabel('Loss')
-        #plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
         plt.xlabel('Epoch')
-        plt.legend(['train'], loc='best')
-        plt.legend(['train', 'val'], loc='best')
-        plt.savefig(plots_path+'loss_'+model_name+'.pdf')
+        plt.legend(loc='upper right')
+        pdf_pages.savefig(fig)
         if args.preview:
             plt.show()
         plt.close()
@@ -332,209 +266,24 @@ if __name__ == "__main__":
         val_acc = pickle.load(open(acc_path+"val_acc_"+model_name+".pickle", "rb"))
         if args.verbose:
             print "val_acc = ", str(val_acc[-1]), "acc = ", str(acc[-1]), "val_acc - acc = ", str(val_acc[-1]-acc[-1])
-        plt.plot(acc)
-        plt.plot(val_acc)
+
+        pdf_pages = PdfPages(plots_path+'acc_'+model_name+".pdf") # plots_path = filepath+"/plots_"+model_name+"/"
+        fig = plt.figure(figsize=(8.27, 5.845), dpi=100)
+        plt.plot(acc, label='train = {0:0.4f}'.format(acc[-1]))
+        plt.plot(val_acc, label='val = {0:0.4f}'.format(val_acc[-1]))
         plt.grid()
-        #plt.ylim(0.8,0.9)
         plt.title('Model accuracy')
         plt.ylabel('Accuracy')
-        #plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
         plt.xlabel('Epoch')
-        plt.legend(['train'], loc='best')
-        plt.legend(['train', 'val'], loc='best')
-        plt.savefig(plots_path+'acc_'+model_name+'.pdf')
+        plt.legend(loc='lower right')
+        pdf_pages.savefig(fig)
         if args.preview:
             plt.show()
         plt.close()
-    quit()
-    # --- Over Training Check --- #
-
-    if args.overtrainingCheck:
-        from scipy.stats import ks_2samp
-        from sklearn.metrics import cohen_kappa_score
-
-        # Returns: kappa : float
-        # The kappa statistic, which is a number between -1 and 1.
-        # Scores above .8 are generally considered good agreement; zero or lower means no agreement (practically random labels).
-        cohen_kappa=cohen_kappa_score(YTest, dataTest["NN"].round())
-
-        # Computes the Kolmogorov-Smirnov statistic on 2 samples.
-        # This is a two-sided test for the null hypothesis that 2 independent samples are drawn from the same continuous distribution.
-        # Returns:	D (float) KS statistic
-        #           p-value (float) two-tailed p-value
-        # Sao comparadas duas amostras de predicao que provem da NN
-        km_value=ks_2samp((sig_dataDev["NN"].append(bkg_dataDev["NN"])),(sig_dataTest["NN"].append(bkg_dataTest["NN"]))) # append() does not change sig_dataDev
-        if args.verbose:
-            print "Cohen Kappa score:", cohen_kappa
-            print "KS test statistic:", km_value[0]
-            print "KS test p-value:", km_value[1]
-
-        #plt.yscale('log')
-        plt.hist(sig_dataDev["NN"], 50, facecolor='blue', alpha=0.7, normed=1, weights=sig_dataDev["EventWeight"]) # histtype by default is "bar"
-        plt.hist(bkg_dataDev["NN"], 50, facecolor='red', alpha=0.7, normed=1, weights=bkg_dataDev["EventWeight"])
-        plt.hist(sig_dataTest["NN"], 50, color='blue', alpha=1, normed=1, histtype="step", weights=sig_dataTest["EventWeight"]) # "step" generates a lineplot that is by default unfilled.
-        plt.hist(bkg_dataTest["NN"], 50, color='red', alpha=1, normed=1, histtype="step",weights=bkg_dataTest["EventWeight"])
-        plt.grid()
-        plt.xlabel('NN output')
-        plt.suptitle("MVA overtraining check for classifier: NN", fontsize=13, fontweight='bold') # MVA = MultiVariable Analysis
-        plt.title("Cohen's kappa: {0}\nKolmogorov Smirnov test (p_value): {1}".format(cohen_kappa, km_value[1]), fontsize=10)
-        plt.legend(['Signal (Train sample)', 'Background (Train sample)', 'Signal (Test sample)', 'Background (Test sample)'], loc='best')
-        plt.savefig(plots_path+'hist_'+model_name+'.pdf', bbox_inches='tight')
-        if args.preview:
-            plt.show()
-        plt.close()
-
-    # --- Predictions plot --- #
-    # Negative bins appear on hist y-axis???
-    if args.prediction:
-        both_dataDev = bkg_dataDev.append(sig_dataDev)
-        plt.figure(figsize=(7,6))
-        plt.xlabel('NN output')
-        plt.title("Number of Events")
-        #plt.yscale('log', nonposy='clip')
-        plt.hist(bkg_dataDev["NN"], 50, facecolor='red', normed=1, weights=bkg_dataDev["EventWeight"]) # in original code there is not normalization but the plot seems to be normalized ???
-        plt.hist(both_dataDev["NN"], 50, color="blue", histtype="step", normed=1, weights=both_dataDev["EventWeight"])
-        plt.legend(['Background + Signal (test sample)', 'Background (test sample)'], loc="best" )
-        plt.grid()
-        plt.savefig(plots_path+'pred_'+model_name+'.pdf', bbox_inches='tight')
-        if args.preview:
-            plt.show()
-        plt.close()
-
-    # PLOTTING FOM AND Efficiency
-    if args.efficiencyAndFOM:
-        from commonFunctions import FullFOM, getYields
-
-        fomEvo = []
-        fomCut = []
-
-        bkgEff = []
-        sigEff = []
-
-        sig_Init = sig_dataTest.EventWeight.sum() * luminosity * 3
-        bkg_Init =  bkg_dataTest.EventWeight.sum() * luminosity * 3
-
-        for cut in np.arange(0.0, 0.9999, 0.001):
-            # return ((sigYield, sigYieldUnc), (bkgYield, bkgYieldUnc))
-            sig, bkg = getYields(dataTest, cut=cut, luminosity=luminosity)
-            if sig[0] > 0 and bkg[0] > 0:
-                fom, fomUnc = FullFOM(sig, bkg) # return (fom, fomErr)
-                fomEvo.append(fom)
-                fomCut.append(cut)
-                bkgEff.append(bkg[0]/bkg_Init) # bkg efficiency ???
-                sigEff.append(sig[0]/sig_Init) # sig efficiency ???
-
-        max_FOM=0.0
-
-        for k in fomEvo:
-            if k>max_FOM:
-                max_FOM=k
-
-        # SAVE VALUES OF FOM EVO AND CUT TO DO A FOM SUMMARY
-        f= open(plots_path+"FOM_evo_data.txt","w+")
-        f.write("\n".join(map(str,fomEvo)))
-        f.close()
-
-        f= open(plots_path+"FOM_cut_data.txt","w+")
-        f.write("\n".join(map(str,fomCut)))
-        f.close()
-
-        Eff = zip(bkgEff, sigEff)
-
-        if args.verbose:
-            print "Maximized FOM:", max_FOM
-            if max_FOM != 0.0:
-                print "FOM Cut:", fomCut[fomEvo.index(max_FOM)]
-            else:
-                print "ERROR: An unexpected Value: max_FOM == 0.0"
-
-            # return ((sigYield, sigYieldUnc), (bkgYield, bkgYieldUnc))
-            tmpSig, tmpBkg = getYields(dataTest)
-            sigYield, sigYieldUnc = tmpSig
-            bkgYield, bkgYieldUnc = tmpBkg
-
-            selectedTest = dataTest[dataTest.NN>fomCut[fomEvo.index(max_FOM)]]
-            selectedSig = selectedTest[selectedTest.category == 1]
-            selectedBkg = selectedTest[selectedTest.category == 0]
-            sigYield = selectedSig.EventWeight.sum() * luminosity * 3  #The factor 3 comes from the splitting
-            bkgYield = selectedBkg.EventWeight.sum() * luminosity * 3
-
-            print "Selected events left after cut @", fomCut[fomEvo.index(max_FOM)]
-            print "   Number of selected Signal Events:", len(selectedSig)
-            print "   Number of selected Background Events:", len(selectedBkg)
-            print "   Sig Yield:", sigYield
-            print "   Bkg Yield:", bkgYield
-
-        plt.figure(figsize=(7,6))
-        plt.subplots_adjust(hspace=0.5)
-
-        plt.subplot(211)
-        plt.plot(fomCut, fomEvo, linewidth = 0.5)
-        plt.title("FOM")
-        plt.ylabel("FOM")
-        plt.xlabel("ND")    # O que significa ND ???
-        plt.legend(["Max. FOM: {0}".format(max_FOM)], loc='best')
-        plt.grid()
-
-        plt.subplot(212)
-        plt.semilogy(fomCut, Eff , linewidth = 0.5) # Eff = zip(bkgEff, sigEff)
-
-        # axvspan(xmin, xmax, ymin=0, ymax=1, **kwargs)
-        # Draw a vertical span (rectangle) from xmin to xmax. With the default values of ymin = 0 and ymax = 1.
-        plt.axvspan(fomCut[fomEvo.index(max_FOM)], 1, facecolor='#2ca02c', alpha=0.3)
-
-        # axvline(x=0, ymin=0, ymax=1, **kwargs)
-        # Add a vertical line across the axes.
-        plt.axvline(x=fomCut[fomEvo.index(max_FOM)], ymin=0, ymax=1)
-        plt.title("Efficiency")
-        plt.ylabel("Eff")
-        plt.xlabel("ND")
-        plt.legend(['Background', 'Signal'], loc='best')
-        plt.grid()
-
-        plt.savefig(plots_path+'FOM_EFF_'+model_name+'.pdf', bbox_inches='tight')
-        if args.preview:
-            plt.show()
-        plt.close()
-
-        #SAME BUT ZOOMED IN , NO LOG yscale
-        plt.figure(figsize=(7,6))
-        plt.subplots_adjust(hspace=0.5)
-
-        plt.subplot(211)
-        plt.plot(fomCut, fomEvo, linewidth = 0.3)
-        plt.xlim(0.88, 1.01)
-        plt.xticks(np.arange(0.88 , 1.01, step = 0.01))
-        plt.title("FOM")
-        plt.ylabel("FOM")
-        plt.xlabel("ND")
-        plt.legend(["Max. FOM: {0}".format(max_FOM)], loc='best')
-        plt.grid()
-
-        plt.subplot(212)
-        plt.plot(fomCut, Eff , linewidth = 0.3)
-        plt.xlim(0.88 , 1.01)
-
-        # Get or set the current tick locations and labels of the x-axis.
-        plt.xticks(np.arange(0.88 , 1.01, step = 0.01))
-        plt.axvspan(fomCut[fomEvo.index(max_FOM)], 1, facecolor='#2ca02c', alpha=0.3)
-        plt.axvline(x=fomCut[fomEvo.index(max_FOM)], ymin=0, ymax=1)
-        plt.title("Efficiency")
-        plt.ylabel("Eff")
-        plt.xlabel("ND")
-        plt.legend(['Background', 'Signal'], loc='best')
-        plt.grid()
-
-        plt.savefig(plots_path+'FOM_EFF_zoomed_'+model_name+'.pdf', bbox_inches='tight')
-        if args.preview:
-            plt.show()
-        plt.close()
-
 
     if args.weights:
         import math
         from matplotlib.colors import LinearSegmentedColormap
-
         #Color maps
         cdict = {'red':   ((0.0, 0.97, 0.97),
                            (0.25, 0.0, 0.0),
@@ -552,7 +301,6 @@ if __name__ == "__main__":
                            (1.0, 0.0, 0.0))
                 }
         myColor = LinearSegmentedColormap('myColorMap', cdict)
-
         nLayers = 0
         for layer in model.layers:
             if len(layer.get_weights()) == 0:
@@ -560,22 +308,19 @@ if __name__ == "__main__":
             nLayers+=1
 
         maxWeights = 0
-
-        figure = plt.figure()
+        pdf_pages = PdfPages(plots_path+'Weights_'+model_name+'.pdf') # plots_path = filepath+"/plots_"+model_name+"/"
+        figure = plt.figure(figsize=(8.27, 11.69), dpi=100)
         figure.suptitle("Weights", fontsize=12)
 
         i=1
         nRow=2
         nCol=3
-
         if nLayers < 5:
             nRow = 2.0
             nCol = 2
-
         elif nLayers < 10:
             nRow = math.ceil(nLayers / 3)
             nCol = 3
-
         else:
             nRow = math.ceil(nLayers / 4)
             nCol = 4
@@ -583,7 +328,6 @@ if __name__ == "__main__":
         for layer in model.layers:
             if len(layer.get_weights()) == 0:
                 continue
-
             ax = figure.add_subplot(nRow, nCol,i)
             im = plt.imshow(layer.get_weights()[0], interpolation="none", vmin=-2, vmax=2, cmap=myColor)
             plt.title(layer.name, fontsize=10)
@@ -593,6 +337,7 @@ if __name__ == "__main__":
             i+=1
 
         plt.tight_layout()
-        plt.savefig(plots_path+'Weights_'+model_name+'.pdf', bbox_inches='tight')
+        pdf_pages.savefig(figure)
         if args.preview:
             plt.show()
+        plt.close()
