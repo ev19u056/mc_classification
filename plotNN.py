@@ -104,9 +104,9 @@ if __name__ == "__main__":
     f.write("Accuracy_score {} {} {}\n".format(score[0], score[1], score[2]))
 
     # --- Calculate Classification Log Loss --- #
-    score.append(metrics.log_loss(YDev, devPredict)#,sample_weight=weightDev))
-    score.append(metrics.log_loss(YVal, valPredict)#,sample_weight=weightVal))
-    score.append(metrics.log_loss(YTest, testPredict)#,sample_weight=weightTest))
+    score.append(metrics.log_loss(YDev, devPredict))#,sample_weight=weightDev))
+    score.append(metrics.log_loss(YVal, valPredict))#,sample_weight=weightVal))
+    score.append(metrics.log_loss(YTest, testPredict))#,sample_weight=weightTest))
 
     if args.verbose:
         print("Log loss score DEV: {}".format(score[3]))
