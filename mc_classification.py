@@ -13,7 +13,7 @@ from keras.models import Sequential
 from keras.layers import Dense, BatchNormalization, Activation#, Dropout, AlphaDropout
 from keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from keras.callbacks import Callback
-from keras import backend
+from keras import backend as K
 
 #import matplotlib.backends.backend_pdf # saving multiple figures into one PDF file
 from matplotlib.backends.backend_pdf import PdfPages
@@ -26,6 +26,9 @@ import pickle   # This module is used for serializing and de-serializing a Pytho
 
 from prepareData import dataLoader
 
+def swish(x):
+    return K.sigmoid(x) * x
+
 # a custom Callback
 # monitor the learning rate
 class LearningRateMonitor(Callback):
@@ -37,7 +40,7 @@ class LearningRateMonitor(Callback):
     def on_epoch_end(self, epoch, logs={}):
         # get and store the learning rate
         optimizer = self.model.optimizer
-        lrate = float(backend.get_value(self.model.optimizer.lr))
+        lrate = float(K.get_value(self.model.optimizer.lr))
         self.lrates.append(lrate)
 
 if __name__ == "__main__":
@@ -114,6 +117,7 @@ if __name__ == "__main__":
 
     ## EXERCISE 2: Create your NN model
     model = Sequential()
+    get_custom_objects().update({'swish': Activation(swish)})
 
     if not args.batchNorm:
         if args.verbose:
@@ -122,7 +126,7 @@ if __name__ == "__main__":
         i=1
         while i < len(architecture) :
             model.add(Dense(int(architecture[i]), activation=act , kernel_initializer=ini))
-            i=i+1
+            i+=1
         model.add(Dense(6, activation='softmax',kernel_initializer='glorot_normal')) # output
                                                                                      # try also glorot_uniform(seed=...)
     else:
