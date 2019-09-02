@@ -248,8 +248,8 @@ if __name__ == "__main__":
 
         pdf_pages = PdfPages(plots_path+'loss_'+model_name+".pdf") # plots_path = filepath+"/plots_"+model_name+"/"
         fig = plt.figure(figsize=(8.27, 5.845), dpi=100)
-        plt.plot(loss, label='train = {0:0.4f}'.format(loss[-1]))
-        plt.plot(val_loss, label='val = {0:0.4f}'.format(val_loss[-1]))
+        plt.plot(loss, label='train = {0:.4E}'.format(loss[-1]))
+        plt.plot(val_loss, label='val = {0:.4E}'.format(val_loss[-1]))
         plt.grid()
         plt.title('Model loss')
         plt.ylabel('Loss')
