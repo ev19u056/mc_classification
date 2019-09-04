@@ -122,10 +122,10 @@ if __name__ == "__main__":
     if not args.batchNorm:
         if args.verbose:
             print("# WARNING: No BatchNormalization!")
-        model.add(Dense(int(architecture[0]), input_dim=53, activation=swish , kernel_initializer=ini)) # input + 1st hidden layer
+        model.add(Dense(int(architecture[0]), input_dim=53, activation=act , kernel_initializer=ini)) # input + 1st hidden layer
         i=1
         while i < len(architecture) :
-            model.add(Dense(int(architecture[i]), activation=swish , kernel_initializer=ini))
+            model.add(Dense(int(architecture[i]), activation=act , kernel_initializer=ini))
             i+=1
         model.add(Dense(6, activation='softmax',kernel_initializer='glorot_normal')) # output
                                                                                      # try also glorot_uniform(seed=...)
