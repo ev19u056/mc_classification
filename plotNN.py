@@ -113,7 +113,6 @@ if __name__ == "__main__":
         print("Log loss score VAL: {}".format(score[4]))
         print("Log loss score TEST: {}".format(score[5]))
     f.write("Log_loss_score {} {} {}\n".format(score[3],score[4],score[5]))
-    f.close()
 
     # if args.verbose:
     #     print "Calculating parameters ..."
@@ -173,14 +172,18 @@ if __name__ == "__main__":
         fig = plt.figure(figsize=(8.27, 5.845), dpi=100)
         lw = 1 # linewidth
         plt.plot(fprTest["micro"], tprTest["micro"], label='micro-average (area = {0:0.4f})'.format(roc_auc_Test["micro"]), color='deeppink', linestyle=':', linewidth=4)
+        f.write("micro-average: {}\n".format(roc_auc_Test["micro"]))
         plt.grid()
         plt.plot(fprTest["macro"], tprTest["macro"], label='macro-average (area = {0:0.4f})'.format(roc_auc_Test["macro"]), color='navy', linestyle=':', linewidth=4)
+        f.write("macro-average: {}\n".format(roc_auc_Test["macro"]))
 
         colors = cycle(['aqua', 'darkorange', 'cornflowerblue','black','brown','darkgreen'])
         for i, color in zip(range(n_classes), colors):
             #plt.plot(fprTest[i], tprTest[i], color=color, lw=lw, label='class {0} (area = {1:0.4f})'.format(i, roc_auc_Test[i]))
             plt.plot(fprTest[i], tprTest[i], color=color, lw=lw, label='{0} (area = {1:0.4f})'.format(classes[i], roc_auc_Test[i]))
-
+            f.write("{}: {}\n".format(classes[i],roc_auc_Test[i]))
+        f.close()
+        
         plt.plot([0, 1], [0, 1], 'k--', lw=lw)
         plt.xlim([0.0, 1.0])
         plt.ylim([0.0, 1.05])
@@ -281,63 +284,63 @@ if __name__ == "__main__":
             plt.show()
         plt.close()
 
-    if args.weights:
-        import math
-        from matplotlib.colors import LinearSegmentedColormap
-        #Color maps
-        cdict = {'red':   ((0.0, 0.97, 0.97),
-                           (0.25, 0.0, 0.0),
-                           (0.75, 0.0, 0.0),
-                           (1.0, 1.0, 1.0)),
-
-                 'green': ((0.0, 0.25, 0.25),
-                           (0.25, 0.15, 0.15),
-                           (0.75, 0.39, 0.39),
-                           (1.0, 0.78, 0.78)),
-
-                 'blue':  ((0.0, 1.0, 1.0),
-                           (0.25, 0.65, 0.65),
-                           (0.75, 0.02, 0.02),
-                           (1.0, 0.0, 0.0))
-                }
-        myColor = LinearSegmentedColormap('myColorMap', cdict)
-        nLayers = 0
-        for layer in model.layers:
-            if len(layer.get_weights()) == 0:
-                continue
-            nLayers+=1
-
-        maxWeights = 0
-        pdf_pages = PdfPages(plots_path+'Weights_'+model_name+'.pdf') # plots_path = filepath+"/plots_"+model_name+"/"
-        figure = plt.figure(figsize=(8.27, 11.69), dpi=100)
-        figure.suptitle("Weights", fontsize=12)
-
-        i=1
-        nRow=2
-        nCol=3
-        if nLayers < 5:
-            nRow = 2.0
-            nCol = 2
-        elif nLayers < 10:
-            nRow = math.ceil(nLayers / 3)
-            nCol = 3
-        else:
-            nRow = math.ceil(nLayers / 4)
-            nCol = 4
-
-        for layer in model.layers:
-            if len(layer.get_weights()) == 0:
-                continue
-            ax = figure.add_subplot(nRow, nCol,i)
-            im = plt.imshow(layer.get_weights()[0], interpolation="none", vmin=-2, vmax=2, cmap=myColor)
-            plt.title(layer.name, fontsize=10)
-            plt.xlabel("Neuron", fontsize=9)
-            plt.ylabel("Input", fontsize=9)
-            plt.colorbar(im, use_gridspec=True)
-            i+=1
-
-        plt.tight_layout()
-        pdf_pages.savefig(figure)
-        if args.preview:
-            plt.show()
-        plt.close()
+    # if args.weights:
+    #     import math
+    #     from matplotlib.colors import LinearSegmentedColormap
+    #     #Color maps
+    #     cdict = {'red':   ((0.0, 0.97, 0.97),
+    #                        (0.25, 0.0, 0.0),
+    #                        (0.75, 0.0, 0.0),
+    #                        (1.0, 1.0, 1.0)),
+    #
+    #              'green': ((0.0, 0.25, 0.25),
+    #                        (0.25, 0.15, 0.15),
+    #                        (0.75, 0.39, 0.39),
+    #                        (1.0, 0.78, 0.78)),
+    #
+    #              'blue':  ((0.0, 1.0, 1.0),
+    #                        (0.25, 0.65, 0.65),
+    #                        (0.75, 0.02, 0.02),
+    #                        (1.0, 0.0, 0.0))
+    #             }
+    #     myColor = LinearSegmentedColormap('myColorMap', cdict)
+    #     nLayers = 0
+    #     for layer in model.layers:
+    #         if len(layer.get_weights()) == 0:
+    #             continue
+    #         nLayers+=1
+    #
+    #     maxWeights = 0
+    #     pdf_pages = PdfPages(plots_path+'Weights_'+model_name+'.pdf') # plots_path = filepath+"/plots_"+model_name+"/"
+    #     figure = plt.figure(figsize=(8.27, 11.69), dpi=100)
+    #     figure.suptitle("Weights", fontsize=12)
+    #
+    #     i=1
+    #     nRow=2
+    #     nCol=3
+    #     if nLayers < 5:
+    #         nRow = 2.0
+    #         nCol = 2
+    #     elif nLayers < 10:
+    #         nRow = math.ceil(nLayers / 3)
+    #         nCol = 3
+    #     else:
+    #         nRow = math.ceil(nLayers / 4)
+    #         nCol = 4
+    #
+    #     for layer in model.layers:
+    #         if len(layer.get_weights()) == 0:
+    #             continue
+    #         ax = figure.add_subplot(nRow, nCol,i)
+    #         im = plt.imshow(layer.get_weights()[0], interpolation="none", vmin=-2, vmax=2, cmap=myColor)
+    #         plt.title(layer.name, fontsize=10)
+    #         plt.xlabel("Neuron", fontsize=9)
+    #         plt.ylabel("Input", fontsize=9)
+    #         plt.colorbar(im, use_gridspec=True)
+    #         i+=1
+    #
+    #     plt.tight_layout()
+    #     pdf_pages.savefig(figure)
+    #     if args.preview:
+    #         plt.show()
+    #     plt.close()
