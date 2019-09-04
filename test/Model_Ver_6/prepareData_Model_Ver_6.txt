@@ -1,9 +1,0 @@
-0.01
-qqWlvHbbJ_PwPy8MINLO_ade.csv:  9911 lines     0.01 
-stopWt_PwPy8_ade.csv:          2778 lines     0.01 
-ttbar_nonallhad_PwPy8_ade.csv: 4168 lines     0.001 
-WlvZqq_Sh221_ade.csv:          1883 lines     0.01 
-WqqWlv_Sh221_ade.csv:          3344 lines     0.01 
-WJets_Sh221.csv:               4162 lines     0.00025 
-PCA: True
-Preparing DATA took:   2.17s

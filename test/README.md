@@ -30,14 +30,7 @@ Val_loss:  7.7712291453e-06   Val_acc:  0.646564313568
 Test_loss: 7.72757211187e-06   Test_acc: 0.647660892978
 Training_time: 1858.18
 
- 
- **Model_Ver_6** : Neuron-Layers: 53 70 60 50 30 40 30 20 6 ; Activation: relu ; Output: softmax ; BatchNormalization: False ; Batch size: 300 ; Epochs: 30 ; Optimizer: Adam ; Regulizer: 0 ; Weight Initializer: he_normal
-Dev_loss:  0.000143690614031   Dev_acc:  0.633930272433
-Val_loss:  0.000319671602933   Val_acc:  0.598476190476
-Test_loss: 0.000285165969438   Test_acc: 0.594285714286
-Training_time: 29.73
 
- 
  **Model_Ver_7** : Neuron-Layers: 53 80 70 60 50 30 40 30 20 10 6 ; Activation: relu ; Output: softmax ; BatchNormalization: False ; Batch size: 3000 ; Epochs: 40 ; Optimizer: Adam ; Regulizer: 0 ; Weight Initializer: he_normal
 Dev_loss:  5.55692012273e-06   Dev_acc:  0.654445624378
 Val_loss:  5.75749819978e-06   Val_acc:  0.650996228428
