@@ -6,4 +6,4 @@ WlvZqq_Sh221_ade.csv:          18839 lines     0.1
 WqqWlv_Sh221_ade.csv:          33449 lines     0.1 
 WJets_Sh221.csv:               41627 lines     0.0025 
 PCA: True
-Preparing DATA took:   22.12s
+Preparing DATA took:   19.28s
