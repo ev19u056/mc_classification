@@ -5,5 +5,3 @@ ttbar_nonallhad_PwPy8_ade.csv: 145881 lines     0.035
 WlvZqq_Sh221_ade.csv:          65938 lines     0.35 
 WqqWlv_Sh221_ade.csv:          117073 lines     0.35 
 WJets_Sh221.csv:               145695 lines     0.00875 
-PCA: True
-Preparing DATA took:   112.51s
